@@ -545,6 +545,39 @@ function showLayer(i){
 LAYERS.forEach((l,i)=>{ const b=document.createElement('button'); b.className='tab'; b.textContent=l[0]; b.onclick=()=>showLayer(i); tabs.append(b); });
 showLayer(0);
 
+/* ---------- Sekme başlığı: durmadan yazılıp silinir ---------- */
+(() => {
+  const PHRASES = [
+    'Enes Karaviranlı',
+    'Yazılım Mühendisi',
+    'ERP & MES Sistemleri',
+    'İHA Yer İstasyonları',
+    '12 Canlı Ürün · 200+ Kullanıcı',
+    'Kavira Software',
+    'İkarus · Avcı Drone Kaptanı',
+    'eneskaraviranli.codes',
+  ];
+  const AWAY = ['👋 Geri gel…', '⚠ Derleme yarım kaldı', '🚀 Seni bekliyorum'];
+  let i = 0, n = 0, dir = 1, awayIdx = 0, timer, holdUntil = 0;
+  const caret = () => (Date.now() / 450 | 0) % 2 ? '▍' : ' ';
+  function step() {
+    const p = PHRASES[i];
+    if (Date.now() < holdUntil) { document.title = '> ' + p + caret(); timer = setTimeout(step, 450); return; } // beklerken imleç yanıp söner
+    n += dir;
+    let wait = dir > 0 ? 75 + Math.random() * 60 : 28;
+    if (n >= p.length) { n = p.length; dir = -1; holdUntil = Date.now() + 1900; wait = 450; }
+    else if (n <= 0) { n = 0; dir = 1; i = (i + 1) % PHRASES.length; wait = 350; }
+    document.title = '> ' + p.slice(0, n) + caret();
+    timer = setTimeout(step, wait);
+  }
+  document.addEventListener('visibilitychange', () => {
+    clearTimeout(timer);
+    if (document.hidden) { document.title = AWAY[awayIdx++ % AWAY.length]; }
+    else { document.title = '> ' + PHRASES[i].slice(0, n); timer = setTimeout(step, 400); }
+  });
+  if (!matchMedia('(prefers-reduced-motion: reduce)').matches) step();
+})();
+
 /* ---------- Matris filtresi ---------- */
 document.getElementById('filters').addEventListener('click', e=>{
   const b = e.target.closest('.flt'); if(!b) return;
