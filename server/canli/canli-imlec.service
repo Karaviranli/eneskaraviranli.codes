@@ -1,0 +1,22 @@
+[Unit]
+Description=eneskaraviranli.codes canli ziyaretci imlecleri (WebSocket)
+After=network.target
+
+[Service]
+ExecStart=/opt/canli-imlec/venv/bin/python /opt/canli-imlec/server.py
+Environment=PORT=8790
+# Kendi geçici kullanıcısıyla, dosya sistemine yazamadan çalışır; Kavira servislerinden yalıtılmış
+DynamicUser=yes
+NoNewPrivileges=yes
+ProtectSystem=strict
+ProtectHome=yes
+PrivateTmp=yes
+PrivateDevices=yes
+RestrictAddressFamilies=AF_INET AF_INET6 AF_UNIX
+MemoryMax=96M
+CPUQuota=25%
+Restart=always
+RestartSec=3
+
+[Install]
+WantedBy=multi-user.target
