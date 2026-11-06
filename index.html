@@ -64,7 +64,47 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Anton&family=Caveat:wght@700&family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
-<style>
+<style id="css-boot">
+/* Açılış sırasında da çalışması gereken stiller (ana CSS kapalıyken: ajanlar, durum çubuğu, perde) */
+:root{--bg:#060606;--line:#1e1e21;--line2:#2a2a2e;--mute:#8b8b92;--dim:#5c5c63;--red:#ff3d3d;--red2:#e3262d;--blue:#3ea2ff;--green:#3dff8f;--mono:'JetBrains Mono',ui-monospace,monospace}
+body{transition:background-color 1.1s ease,color 1.1s ease}
+html.boot .ruler,html.boot #codeport{display:none}
+#curtain{position:fixed;left:0;right:0;bottom:0;top:0;background:#fff;z-index:50;pointer-events:none;display:none}
+html.boot #curtain{display:block}
+#curtain::before{content:"";position:absolute;left:0;right:0;top:-2px;height:2px;background:var(--blue);box-shadow:0 0 16px var(--blue)}
+html.boot-blank #curtain::before{display:none}
+#boot-term{position:fixed;left:16px;bottom:64px;z-index:72;font:500 12px/1.75 var(--mono);color:#333;pointer-events:none;white-space:pre;transition:opacity .8s ease .6s,color 1s,background-color 1s,border-color 1s;background:rgba(255,255,255,.94);border:1px solid #ddd;padding:8px 12px;border-radius:4px}
+#boot-term:empty{display:none}
+html:not(.boot) #boot-term{background:rgba(14,14,16,.9);border-color:#2a2a2e}
+#boot-term .ok{color:#0a8a3a;font-weight:700}#boot-term .req{color:#1f6fd1;font-weight:700}
+html:not(.boot) #boot-term{color:#c4c4ca}
+html.boot-done #boot-term{opacity:0}
+#agents{position:absolute;inset:0;pointer-events:none;z-index:60;overflow:hidden}
+.agent{position:absolute;left:0;top:0;width:18px;height:18px;will-change:transform;filter:drop-shadow(0 2px 4px rgba(0,0,0,.55))}
+.selbox{position:absolute;border:1px solid var(--blue);background:rgba(62,162,255,.07);transition:opacity .25s;pointer-events:none}
+.selbox i{position:absolute;width:6px;height:6px;background:#fff;border:1px solid var(--blue)}
+.selbox i:nth-child(1){left:-3px;top:-3px}.selbox i:nth-child(2){right:-3px;top:-3px}
+.selbox i:nth-child(3){left:-3px;bottom:-3px}.selbox i:nth-child(4){right:-3px;bottom:-3px}
+.selbox em{position:absolute;left:-1px;top:-19px;font-style:normal;font-family:var(--mono);font-size:9.5px;color:#fff;background:var(--blue);padding:2px 6px;white-space:nowrap}
+.ripple{position:absolute;width:30px;height:30px;margin:-15px 0 0 -15px;border:2px solid;border-radius:50%;pointer-events:none;animation:rip .55s ease-out forwards}
+@keyframes rip{from{transform:scale(.2);opacity:1}to{transform:scale(1.6);opacity:0}}
+.status{position:fixed;left:50%;bottom:16px;transform:translateX(-50%);z-index:70;display:flex;align-items:center;gap:12px;
+  font-family:var(--mono);font-size:11px;color:#c4c4ca;background:rgba(14,14,16,.88);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);
+  border:1px solid var(--line2);border-radius:999px;padding:7px 8px 7px 12px;white-space:nowrap}
+.dots{display:flex}
+.dots span{width:11px;height:11px;border-radius:50%;border:2px solid #0e0e10;margin-left:-4px}
+.dots span:first-child{margin-left:0}
+.bar{width:90px;height:3px;background:var(--line2);border-radius:3px;overflow:hidden}
+.bar i{display:block;height:100%;width:0;background:var(--blue);transition:width .3s}
+.st-state{color:var(--blue)}
+.replay{font-family:var(--mono);font-size:11px;color:#fff;background:#202024;border:1px solid var(--line2);border-radius:999px;padding:5px 11px;cursor:pointer}
+.sep{width:1px;height:14px;background:var(--line2)}
+.caret{display:inline-block;width:2px;height:1.05em;background:var(--blue);vertical-align:-.15em;margin-left:1px;animation:blink .7s steps(1) infinite}
+@keyframes blink{50%{opacity:.2}}
+@media (max-width:700px){.status{font-size:10px;gap:8px}.status .bar,.status .sep.s2,.status .dots{display:none}#boot-term{font-size:10px;bottom:60px}}
+@media (prefers-reduced-motion:reduce){#agents{display:none}}
+</style>
+<style id="css-main">
 :root{
   --bg:#060606; --panel:#0c0c0d; --panel2:#111113; --line:#1e1e21; --line2:#2a2a2e;
   --text:#ededed; --mute:#8b8b92; --dim:#5c5c63;
@@ -299,6 +339,69 @@ html.scrolling .ruler{opacity:1}
 #guide{left:26px;top:0;bottom:0;width:1px;background:var(--red2)!important}
 #ruler-mark{left:0;width:16px;height:4px;background:var(--red)!important;box-shadow:0 0 10px var(--red)}
 
+
+/* ---------- KAYAN BANTLAR ---------- */
+.marquee{position:relative;z-index:1;overflow:hidden;border-top:1px solid var(--line);border-bottom:1px solid var(--line);padding:18px 0;background:rgba(0,0,0,.35)}
+.mq-track{display:flex;align-items:center;width:max-content;will-change:transform;white-space:nowrap}
+.mq-track span{font-family:var(--cond);font-size:clamp(40px,6vw,78px);line-height:1;letter-spacing:.02em;color:transparent;-webkit-text-stroke:1px rgba(255,255,255,.3);padding:0 24px}
+.mq-track span.f{color:var(--red2);-webkit-text-stroke:0}
+.mq-track i{font-style:normal;color:var(--red);font-size:26px}
+#scrollbar{position:fixed;left:0;top:0;height:2px;width:0;background:var(--red);z-index:58;box-shadow:0 0 10px var(--red);pointer-events:none}
+
+/* ---------- YKİ ---------- */
+.gcs{margin-top:36px;border:1px solid var(--line2);background:#07090b;border-radius:6px;overflow:hidden;position:relative;box-shadow:0 40px 120px -40px rgba(62,162,255,.25)}
+.gcs-top{display:flex;flex-wrap:wrap;gap:10px;align-items:center;justify-content:space-between;padding:10px 12px;border-bottom:1px solid var(--line);background:#0b0e11}
+.gcs-brand{font-family:var(--mono);font-size:11px;font-weight:700;letter-spacing:.12em;color:#cfe8ff;display:flex;align-items:center;gap:8px}
+.gcs-brand::before{content:"";width:8px;height:8px;border-radius:50%;background:var(--green);box-shadow:0 0 8px var(--green);animation:blink 1.6s infinite}
+.gcs-modes{display:flex;gap:6px;flex-wrap:wrap}
+.gcs-btn{font-family:var(--mono);font-size:11px;font-weight:700;letter-spacing:.08em;color:#cfd6dd;background:#12171c;border:1px solid #243039;padding:7px 11px;cursor:pointer;border-radius:3px;transition:background .15s,border-color .15s,color .15s}
+.gcs-btn:hover{border-color:#5b7183;color:#fff}
+.gcs-btn.on{background:var(--blue);border-color:var(--blue);color:#001426}
+.gcs-btn.lock.on{background:var(--red2);border-color:var(--red2);color:#fff}
+.gcs-body{display:grid;grid-template-columns:1.65fr 1fr;min-height:460px}
+.gcs-map{position:relative;border-right:1px solid var(--line);min-height:300px}
+.gcs-map canvas,.gcs-pfd canvas{position:absolute;inset:0;width:100%;height:100%;display:block}
+.gcs-map canvas{cursor:crosshair}
+.gcs-side{display:flex;flex-direction:column;min-width:0}
+.gcs-pfd{position:relative;aspect-ratio:4/3;border-bottom:1px solid var(--line)}
+.gcs-tele{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--line);border-bottom:1px solid var(--line)}
+.gcs-tele div{background:#0a0d10;padding:8px 10px}
+.gcs-tele small{display:block;font-family:var(--mono);font-size:9px;color:var(--dim);letter-spacing:.1em}
+.gcs-tele b{font-family:var(--mono);font-size:14px;color:#e8f3ff;font-weight:700}
+.gcs-log{flex:1;min-height:130px;font-family:var(--mono);font-size:10px;line-height:1.6;padding:8px 10px;color:#7f98ad;overflow:hidden;white-space:nowrap}
+.gcs-log .k{color:#7cc7ff}.gcs-log .w{color:#ffd23f}.gcs-log .r{color:#ff6b6b}.gcs-log .g{color:#3dff8f}.gcs-log .d{color:#4b5d6c}
+.gcs-hint{font-family:var(--mono);font-size:10.5px;color:var(--dim);padding:9px 12px;border-top:1px solid var(--line);background:#0b0e11;line-height:1.9}
+.gcs-hint kbd{font-family:var(--mono);border:1px solid #2a3540;border-bottom-width:2px;padding:0 5px;border-radius:3px;color:#cfd6dd;margin:0 1px}
+.gcs-toast{position:absolute;left:50%;top:62px;transform:translate(-50%,-10px);opacity:0;transition:.3s;font-family:var(--mono);font-weight:700;font-size:12px;letter-spacing:.1em;background:var(--red2);color:#fff;padding:10px 16px;z-index:3;pointer-events:none;box-shadow:0 10px 40px rgba(227,38,45,.5);white-space:nowrap}
+.gcs-toast.on{opacity:1;transform:translate(-50%,0)}
+.gcs-toast.ok{background:#12a454;box-shadow:0 10px 40px rgba(18,164,84,.45)}
+
+/* ---------- KESİM ---------- */
+.kesim{display:grid;grid-template-columns:320px 1fr;gap:18px;margin-top:36px;align-items:start}
+.k-form{border:1px solid var(--line);background:var(--panel);padding:20px;display:flex;flex-direction:column;gap:14px}
+.k-form label{font-family:var(--mono);font-size:10px;color:var(--mute);letter-spacing:.1em;text-transform:uppercase;display:flex;flex-direction:column;gap:6px}
+.k-form input,.k-form select{font-family:var(--mono);font-size:14px;color:#fff;background:#0a0a0b;border:1px solid var(--line2);padding:10px 12px;outline:none;border-radius:0;width:100%}
+.k-form input:focus,.k-form select:focus{border-color:var(--red)}
+.k-row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.k-go{font-family:var(--mono);font-weight:700;font-size:12px;letter-spacing:.12em;text-transform:uppercase;background:var(--red2);color:#fff;border:0;padding:13px;cursor:pointer}
+.k-go:hover{background:var(--red)}
+.k-note{font-size:11px;color:var(--dim);line-height:1.55}
+.k-err{font-family:var(--mono);font-size:11px;color:#ff8080;min-height:14px}
+.k-out{border:1px solid var(--line);background:var(--panel);padding:20px;min-width:0}
+.k-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--line);border:1px solid var(--line);margin-bottom:18px}
+.k-stats div{background:var(--bg);padding:12px 14px}
+.k-stats b{font-family:var(--cond);font-size:28px;color:var(--red);font-weight:400}
+.k-stats small{display:block;font-family:var(--mono);font-size:9.5px;color:var(--mute);letter-spacing:.08em;text-transform:uppercase}
+.k-bars{display:flex;flex-direction:column;gap:12px}
+.kbar-h{display:flex;justify-content:space-between;font-family:var(--mono);font-size:10px;color:var(--mute);margin-bottom:5px}
+.kbar-t{position:relative;height:34px;background:repeating-linear-gradient(135deg,rgba(255,61,61,.2) 0 6px,rgba(255,61,61,.05) 6px 12px);border:1px solid var(--line2)}
+.kp{position:absolute;top:0;bottom:0;display:flex;align-items:center;justify-content:center;font-family:var(--mono);font-size:10px;font-weight:700;color:#0a0a0a;overflow:hidden;white-space:nowrap;box-shadow:inset -2px 0 0 #060606;transition:opacity .3s,transform .4s cubic-bezier(.3,1.6,.5,1)}
+.kp.pend{opacity:0;transform:scaleY(.15)}
+.k-legend{display:flex;flex-wrap:wrap;gap:8px 16px;margin-top:16px;font-family:var(--mono);font-size:11px;color:#c4c4ca}
+.k-legend i{display:inline-block;width:10px;height:10px;margin-right:6px;vertical-align:-1px}
+@media (max-width:1020px){.gcs-body{grid-template-columns:1fr}.gcs-pfd{aspect-ratio:auto;height:300px}.gcs-map{min-height:340px;border-right:0;border-bottom:1px solid var(--line)}.kesim{grid-template-columns:1fr}.k-stats{grid-template-columns:1fr 1fr}}
+@media (max-width:700px){.gcs-tele{grid-template-columns:1fr 1fr}.gcs-pfd{height:240px}.gcs-map{min-height:260px}}
+
 /* ---------- RESPONSIVE ---------- */
 @media (max-width:1020px){
   .hero-grid{grid-template-columns:1fr 1fr}
@@ -332,12 +435,18 @@ html.scrolling .ruler{opacity:1}
   #agents{display:none}
 }
 </style>
+<script>
+  // Açılış: ana CSS'i kapat, sayfa çıplak HTML olarak başlasın (ajanlar CSS'i sonra "uygular")
+  window.__BOOT = document.documentElement.classList.contains('js') && !matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if (window.__BOOT) { document.getElementById('css-main').media = 'not all'; document.documentElement.classList.add('boot', 'boot-blank'); }
+</script>
 </head>
 <body>
 
-<div id="canvas" aria-hidden="true"></div>
+<div id="curtain" aria-hidden="true"></div>
+<div id="boot-term" aria-hidden="true"></div>
 <div id="agents" aria-hidden="true"></div>
-<div id="loader" aria-hidden="true"><div class="lbox"><i></i></div><span id="ld-text">sayfa derleniyor · 0%</span></div>
+<div id="scrollbar" aria-hidden="true"></div>
 <div class="ruler" id="ruler-top" aria-hidden="true"></div>
 <div class="ruler" id="ruler-left" aria-hidden="true"></div>
 <div class="ruler" id="guide" aria-hidden="true"></div>
@@ -347,7 +456,7 @@ html.scrolling .ruler{opacity:1}
 <nav>
   <a href="#top" class="logo" data-b><i>E</i>ENES.</a>
   <div class="links" data-b>
-    <a href="#hakkimda">Hakkımda</a><a href="#projeler">Projeler</a><a href="#matris">Matris</a><a href="#iletisim">İletişim</a>
+    <a href="#hakkimda">Hakkımda</a><a href="#projeler">Projeler</a><a href="#yki">YKİ</a><a href="#kesim">Kesim</a><a href="#matris">Matris</a><a href="#iletisim">İletişim</a>
   </div>
   <div class="avail" data-b><span>Müsait</span><a href="#iletisim">İŞ BİRLİĞİ</a></div>
 </nav>
@@ -410,10 +519,12 @@ html.scrolling .ruler{opacity:1}
   </div>
 </header>
 
+<div class="marquee" data-sec data-dir="1" aria-hidden="true"><div class="mq-in" data-b><div class="mq-track"><span>ERP</span><i>✦</i><span class="f">MES</span><i>✦</i><span>MAVLINK</span><i>✦</i><span>FLUTTER</span><i>✦</i><span class="f">FASTAPI</span><i>✦</i><span>REACT</span><i>✦</i><span>İHA</span><i>✦</i><span class="f">YKİ</span><i>✦</i><span>SAAS</span><i>✦</i><span>AI AJANLARI</span><i>✦</i></div></div></div>
+
 <!-- ABOUT -->
 <section id="hakkimda" data-sec>
   <div class="wrap">
-    <div class="secidx" data-b>// 01.00 SEC_HAKKIMDA · İNDEKS [01 / 04]</div>
+    <div class="secidx" data-b>// 01.00 SEC_HAKKIMDA · İNDEKS [01 / 05]</div>
     <div class="eyebrow" data-b>Mühendislik profili</div>
     <h2 data-b>Geçmiş &amp; Felsefe</h2>
     <div class="about">
@@ -436,7 +547,7 @@ html.scrolling .ruler{opacity:1}
 <!-- FLAGSHIP -->
 <section id="projeler" data-sec>
   <div class="wrap">
-    <div class="secidx" data-b>// 02.00 SEC_PROJELER · İNDEKS [02 / 04]</div>
+    <div class="secidx" data-b>// 02.00 SEC_PROJELER · İNDEKS [02 / 05]</div>
     <div class="eyebrow" data-b>Mimari vitrin</div>
     <h2 data-b>Öne Çıkan Projeler</h2>
     <p class="sub" data-b>Fabrika sahasından İHA yer istasyonuna, gerçek kullanıcıya ve gerçek uçuşa hizmet eden sistemler.</p>
@@ -487,10 +598,80 @@ html.scrolling .ruler{opacity:1}
   </div>
 </section>
 
+<!-- YKİ SİMÜLATÖRÜ -->
+<section id="yki" data-sec>
+  <div class="wrap">
+    <div class="secidx" data-b>// 03.00 SEC_YKI · İNDEKS [03 / 05]</div>
+    <div class="eyebrow" data-b>Canlı simülasyon · İkarus</div>
+    <h2 data-b>Yer Kontrol İstasyonu</h2>
+    <p class="sub" data-b>İkarus'ta yazdığım YKİ'lerin tarayıcıda çalışan küçük bir kopyası. Ajanlar rotaya nokta ekliyor; sen de haritaya tıklayabilir, KİLİTLEN ile bir hedefe kilitlenmeyi deneyebilirsin.</p>
+    <div class="gcs" id="gcs" data-b>
+      <div class="gcs-top">
+        <div class="gcs-brand">İKARUS YKİ · MAVLINK v2 · LINK AKTİF</div>
+        <div class="gcs-modes">
+          <button class="gcs-btn on" data-mode="OTONOM">OTONOM</button>
+          <button class="gcs-btn" data-mode="MANUEL">MANUEL</button>
+          <button class="gcs-btn lock" data-mode="KİLİT">KİLİTLEN</button>
+          <button class="gcs-btn" data-mode="RTL">EVE DÖN</button>
+        </div>
+      </div>
+      <div class="gcs-body">
+        <div class="gcs-map"><canvas id="gcs-map" aria-label="İHA görev haritası"></canvas></div>
+        <div class="gcs-side">
+          <div class="gcs-pfd"><canvas id="gcs-pfd" aria-label="Birincil uçuş göstergesi"></canvas></div>
+          <div class="gcs-tele">
+            <div><small>MOD</small><b data-t="mod">OTONOM</b></div>
+            <div><small>HIZ</small><b data-t="hiz">79 km/s</b></div>
+            <div><small>İRTİFA</small><b data-t="alt">120 m</b></div>
+            <div><small>BATARYA</small><b data-t="bat">100%</b></div>
+            <div><small>GPS</small><b data-t="gps">3D · 14</b></div>
+            <div><small>ROTA</small><b data-t="wp">1/4</b></div>
+          </div>
+          <div class="gcs-log" id="gcs-log"></div>
+        </div>
+      </div>
+      <div class="gcs-hint">Haritaya tıkla: rota noktası ekle · <kbd>MANUEL</kbd> modda <kbd>←</kbd><kbd>→</kbd> / <kbd>A</kbd><kbd>D</kbd> dön, <kbd>↑</kbd><kbd>↓</kbd> irtifa · <kbd>KİLİTLEN</kbd>: hedefi 5 sn kamera konisinde tut</div>
+      <div class="gcs-toast" id="gcs-toast"></div>
+    </div>
+  </div>
+</section>
+
+<!-- KESİM DEMOSU -->
+<section id="kesim" data-sec>
+  <div class="wrap">
+    <div class="secidx" data-b>// 04.00 SEC_KESIM · İNDEKS [04 / 05]</div>
+    <div class="eyebrow" data-b>Canlı hesap motoru · Kavira</div>
+    <h2 data-b>Kesim Optimizasyonu</h2>
+    <p class="sub" data-b>Kavira'nın hesap motorunun sadeleştirilmiş bir demosu. Ölçüyü gir; ajanlar her parçayı 6 metrelik profil boylarına en az fireyle yerleştirsin.</p>
+    <div class="kesim">
+      <form class="k-form" id="k-form" data-b>
+        <label>Sistem<select id="k-sis"><option value="surme">Sürme pencere (2 kanat)</option><option value="giyotin">Giyotin cam (3 kanat)</option><option value="sabit">Sabit pencere</option></select></label>
+        <div class="k-row"><label>Genişlik (mm)<input id="k-w" type="number" value="1800" min="400" max="6000" step="10"></label><label>Yükseklik (mm)<input id="k-h" type="number" value="1400" min="400" max="3500" step="10"></label></div>
+        <label>Adet<input id="k-n" type="number" value="2" min="1" max="20"></label>
+        <button class="k-go" type="submit">Kesim planını çıkar →</button>
+        <div class="k-err" id="k-err" role="alert"></div>
+        <div class="k-note">Profil boyu 6000 mm, testere payı 4 mm. Parça formülleri gösterim amaçlı sadeleştirilmiştir; gerçek Kavira motoru sistem kataloğuna göre hesaplar.</div>
+      </form>
+      <div class="k-out" data-b>
+        <div class="k-stats">
+          <div><b data-k="boy">0</b><small>Profil boyu</small></div>
+          <div><b data-k="parca">0</b><small>Parça</small></div>
+          <div><b data-k="fire">%0</b><small>Fire</small></div>
+          <div><b data-k="metre">0</b><small>Net metre</small></div>
+        </div>
+        <div class="k-bars" id="k-bars"></div>
+        <div class="k-legend" id="k-legend"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="marquee" data-sec data-dir="-1" aria-hidden="true"><div class="mq-in" data-b><div class="mq-track"><span>KESİM PLANI</span><i>✦</i><span class="f">METRAJ</span><i>✦</i><span>FİRE %</span><i>✦</i><span>TELEMETRİ</span><i>✦</i><span class="f">KİLİTLENME</span><i>✦</i><span>OTONOM</span><i>✦</i><span>TEKLİF</span><i>✦</i><span class="f">ROTA</span><i>✦</i></div></div></div>
+
 <!-- MATRIX -->
 <section id="matris" data-sec>
   <div class="wrap">
-    <div class="secidx" data-b>// 03.00 SEC_MATRIS · İNDEKS [03 / 04]</div>
+    <div class="secidx" data-b>// 05.00 SEC_MATRIS · İNDEKS [05 / 05]</div>
     <div class="eyebrow" data-b>Mühendislik dizini</div>
     <h2 data-b>Sistem Matrisi</h2>
     <p class="sub" data-b>Endüstriyel SaaS'tan İHA yer istasyonlarına, yapay zekâdan mobile: GitHub'daki 34 projemin tamamı. Özel repolar 🔒 ile işaretli.</p>
@@ -554,9 +735,9 @@ html.scrolling .ruler{opacity:1}
       <button class="copy" id="copy"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><rect x="9" y="9" width="12" height="12" rx="2"/><path d="M5 15V5a2 2 0 0 1 2-2h10"/></svg><span>E-postayı kopyala</span></button>
     </div>
     <div class="socials" data-b>
-      <a href="https://github.com/Karaviranli" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 .5a12 12 0 0 0-3.8 23.4c.6.1.8-.3.8-.6v-2c-3.3.7-4-1.6-4-1.6-.6-1.4-1.4-1.8-1.4-1.8-1-.7.1-.7.1-.7 1.2.1 1.8 1.2 1.8 1.2 1 1.8 2.8 1.3 3.5 1 .1-.8.4-1.3.7-1.6-2.7-.3-5.5-1.3-5.5-6 0-1.2.5-2.3 1.3-3.1-.2-.4-.6-1.6.1-3.2 0 0 1-.3 3.3 1.2a11.5 11.5 0 0 1 6 0C17.3 4.7 18.3 5 18.3 5c.7 1.6.2 2.8.1 3.2.8.8 1.3 1.9 1.3 3.1 0 4.6-2.8 5.6-5.5 5.9.4.4.8 1.1.8 2.2v3.3c0 .3.2.7.8.6A12 12 0 0 0 12 .5z"/></svg>github.com/Karaviranli</a>
-      <a href="https://www.linkedin.com/in/enes-karaviranl%C4%B1/" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M20.4 20.5h-3.6v-5.6c0-1.3 0-3-1.8-3s-2.1 1.4-2.1 2.9v5.7H9.3V9h3.4v1.6c.5-.9 1.6-1.8 3.4-1.8 3.6 0 4.3 2.4 4.3 5.5v6.2zM5.3 7.4a2.1 2.1 0 1 1 0-4.2 2.1 2.1 0 0 1 0 4.2zM7.1 20.5H3.5V9h3.6v11.5zM22.2 0H1.8C.8 0 0 .8 0 1.7v20.6c0 .9.8 1.7 1.8 1.7h20.4c1 0 1.8-.8 1.8-1.7V1.7C24 .8 23.2 0 22.2 0z"/></svg>in/enes-karaviranlı</a>
-      <a href="mailto:m.eneskaraviranli@gmail.com"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 6-10 7L2 6"/></svg>E-posta gönder</a>
+      <a href="https://github.com/Karaviranli" target="_blank" rel="noopener"><svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M12 .5a12 12 0 0 0-3.8 23.4c.6.1.8-.3.8-.6v-2c-3.3.7-4-1.6-4-1.6-.6-1.4-1.4-1.8-1.4-1.8-1-.7.1-.7.1-.7 1.2.1 1.8 1.2 1.8 1.2 1 1.8 2.8 1.3 3.5 1 .1-.8.4-1.3.7-1.6-2.7-.3-5.5-1.3-5.5-6 0-1.2.5-2.3 1.3-3.1-.2-.4-.6-1.6.1-3.2 0 0 1-.3 3.3 1.2a11.5 11.5 0 0 1 6 0C17.3 4.7 18.3 5 18.3 5c.7 1.6.2 2.8.1 3.2.8.8 1.3 1.9 1.3 3.1 0 4.6-2.8 5.6-5.5 5.9.4.4.8 1.1.8 2.2v3.3c0 .3.2.7.8.6A12 12 0 0 0 12 .5z"/></svg>github.com/Karaviranli</a>
+      <a href="https://www.linkedin.com/in/enes-karaviranl%C4%B1/" target="_blank" rel="noopener"><svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M20.4 20.5h-3.6v-5.6c0-1.3 0-3-1.8-3s-2.1 1.4-2.1 2.9v5.7H9.3V9h3.4v1.6c.5-.9 1.6-1.8 3.4-1.8 3.6 0 4.3 2.4 4.3 5.5v6.2zM5.3 7.4a2.1 2.1 0 1 1 0-4.2 2.1 2.1 0 0 1 0 4.2zM7.1 20.5H3.5V9h3.6v11.5zM22.2 0H1.8C.8 0 0 .8 0 1.7v20.6c0 .9.8 1.7 1.8 1.7h20.4c1 0 1.8-.8 1.8-1.7V1.7C24 .8 23.2 0 22.2 0z"/></svg>in/enes-karaviranlı</a>
+      <a href="mailto:m.eneskaraviranli@gmail.com"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 6-10 7L2 6"/></svg>E-posta gönder</a>
     </div>
     <footer data-b>© 2026 Mehmet Enes Karaviranlı · Tüm sistemler çalışıyor<br>Samsun Üniversitesi · Yazılım Mühendisliği</footer>
   </div>
@@ -647,15 +828,23 @@ document.getElementById('copy').addEventListener('click', async e=>{
   setTimeout(()=>span.textContent='E-postayı kopyala', 1800);
 });
 
-/* ---------- Ajan imleçleri: sayfayı canlı inşa eder ---------- */
+/* ---------- Ajan imleçleri: sayfayı sıfırdan canlı inşa eder ----------
+   Açılış: boş beyaz sayfa → çıplak HTML (tarayıcı varsayılanı) → style.css gelir,
+   her öğe çıplak HTML'deki yerinde kalır ve ajanlar onları sürükleyerek gerçek yerine taşır.
+   Aşağıdaki bölümler ekrana girdikçe tel kafes + daktilo ile inşa edilir. */
 (() => {
   const $ = id => document.getElementById(id);
+  const root = document.documentElement;
   const reduce = window.__STATIC || matchMedia('(prefers-reduced-motion: reduce)').matches;
   const items = [...document.querySelectorAll('[data-b]')];
-  const status = $('status'), loader = $('loader'), canvas = $('canvas'), nav = document.querySelector('nav');
-  if (reduce) {
+  const status = $('status'), nav = document.querySelector('nav');
+  const cssMain = $('css-main'), curtain = $('curtain'), term = $('boot-term');
+  // Diğer bölümler (YKİ, kesim) boştaki ajanlara iş verebilir; animasyonsuz modda iş anında yapılır
+  window.agentJob = (getPoint, onArrive) => { try { onArrive(); } catch (e) {} };
+  if (reduce || !window.__BOOT) {
     items.forEach(i => i.classList.add('built')); nav.classList.add('on');
-    status.style.display = 'none'; loader.remove(); canvas.remove(); return;
+    if (reduce) status.style.display = 'none';
+    if (reduce) return;
   }
   if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
   scrollTo(0, 0);
@@ -675,9 +864,9 @@ document.getElementById('copy').addEventListener('click', async e=>{
     rMark.style.top = (max > 0 ? (y / max) * (innerHeight - 4) : 0) + 'px';
   }
   addEventListener('scroll', () => {
-    document.documentElement.classList.add('scrolling');
+    root.classList.add('scrolling');
     clearTimeout(scrollTimer);
-    scrollTimer = setTimeout(() => document.documentElement.classList.remove('scrolling'), 650);
+    scrollTimer = setTimeout(() => root.classList.remove('scrolling'), 650);
     updateRuler();
   }, { passive: true });
   updateRuler();
@@ -696,13 +885,13 @@ document.getElementById('copy').addEventListener('click', async e=>{
   // daktilo efekti için orijinal metinleri sakla
   const texts = new Map();
   items.forEach(el => {
-    if (!el.matches(TYPED)) return;
+    if (!el.matches(TYPED) || heroItems.includes(el)) return;
     const nodes = [], w = document.createTreeWalker(el, NodeFilter.SHOW_TEXT); let n;
     while ((n = w.nextNode())) if (n.nodeValue.trim()) nodes.push([n, n.nodeValue]);
     if (nodes.length) texts.set(el, nodes);
   });
 
-  const TAG = el => el.tagName === 'DIV' || el.tagName === 'ARTICLE'
+  const TAG = el => el.tagName === 'DIV' || el.tagName === 'ARTICLE' || el.tagName === 'FORM'
     ? (el.className.split(' ')[0] || el.tagName.toLowerCase()) : el.tagName.toLowerCase();
 
   const agents = [];
@@ -712,15 +901,21 @@ document.getElementById('copy').addEventListener('click', async e=>{
     const c = COLORS[i % COLORS.length];
     el.innerHTML = `<svg viewBox="0 0 18 18" width="15" height="15"><path d="M2 1.5 L16 7.5 L9.2 9.2 L7 16 Z" fill="${c}" stroke="#000" stroke-width="1.3" stroke-linejoin="round"/></svg>`;
     layer.append(el);
-    const a = Math.random() * 6.28;
-    agents.push({ el, i, color: c, x: innerWidth / 2 + Math.cos(a) * 300, y: innerHeight / 2 + Math.sin(a) * 300,
-      tx: 0, ty: 0, task: null, next: 0, op: 0, seed: Math.random() * 100 });
+    // ekranın kenarlarından içeri süzülerek gelsinler
+    const side = i % 4;
+    const x0 = side === 0 ? -30 : side === 1 ? innerWidth + 30 : Math.random() * innerWidth;
+    const y0 = side === 2 ? -30 : side === 3 ? innerHeight + 30 : Math.random() * innerHeight;
+    agents.push({ el, i, color: c, x: x0, y: y0, tx: x0, ty: y0, task: null, next: 0, op: 0, seed: Math.random() * 100 });
   }
 
-  let queue = [], queued = new Set(), built = 0, t0 = 0, doneAt = null;
-  let stage = 'loading', stageT = performance.now(), canvasOn = false;
+  let queue = [], queued = new Set(), dragQ = [], jobs = [], built = 0, t0 = 0, doneAt = null;
+  let stage = 'blank', stageT = performance.now(), termStep = 0;
   const total = items.length;
-  const crosses = new Map();
+
+  window.agentJob = (getPoint, onArrive) => {
+    if (stage !== 'build' || jobs.length > 60) { try { onArrive(); } catch (e) {} return; }
+    jobs.push({ getPoint, onArrive });
+  };
 
   function enqueue(list) {
     list.forEach(el => { if (!queued.has(el) && !el.classList.contains('built')) { queued.add(el); queue.push(el); } });
@@ -735,32 +930,19 @@ document.getElementById('copy').addEventListener('click', async e=>{
     return { x: r.left + scrollX, y: r.top + scrollY, w: r.width, h: r.height };
   }
 
-  function beginBuild(now) {
-    stage = 'build'; t0 = now; doneAt = null;
-    loader.classList.add('off');
-    canvas.classList.add('on'); canvasOn = true;
-    nav.classList.add('on');
-    // hedeflere "+" nişangâhları yerleştir
-    heroItems.forEach((el, k) => setTimeout(() => {
-      if (el.classList.contains('built') || el.classList.contains('wire')) return;
-      const r = docRect(el), c = document.createElement('div');
-      c.className = 'cross'; c.style.left = r.x + 'px'; c.style.top = r.y + 'px';
-      layer.append(c); crosses.set(el, c);
-    }, k * 35));
-    setTimeout(() => {
-      enqueue([...document.querySelectorAll('nav [data-b]')]);
-      sections.forEach(s => io.observe(s));
-    }, 380);
-  }
-
-  function makeBox(a, el, r) {
+  function makeBox(a, el, r, label) {
     const b = document.createElement('div');
     b.className = 'selbox';
     b.style.left = r.x + 'px'; b.style.top = r.y + 'px'; b.style.width = '0px'; b.style.height = '0px';
-    b.innerHTML = `<i></i><i></i><i></i><i></i><em style="background:${a.color};color:#000">${TAG(el)} · ajan-${String(a.i + 1).padStart(2, '0')}</em>`;
+    b.innerHTML = `<i></i><i></i><i></i><i></i><em style="background:${a.color};color:#000">${label || TAG(el)} · ajan-${String(a.i + 1).padStart(2, '0')}</em>`;
     layer.append(b);
-    const c = crosses.get(el); if (c) { c.remove(); crosses.delete(el); }
     return b;
+  }
+
+  function ripple(x, y, color) {
+    const r = document.createElement('div');
+    r.className = 'ripple'; r.style.left = x + 'px'; r.style.top = y + 'px'; r.style.borderColor = color;
+    layer.append(r); setTimeout(() => r.remove(), 600);
   }
 
   function writeText(nodes, count, caret) {
@@ -771,6 +953,40 @@ document.getElementById('copy').addEventListener('click', async e=>{
       else { n.nodeValue = ''; if (!cur) cur = n; }
     }
     if (cur && caret) cur.parentNode.insertBefore(caret, cur.nextSibling);
+  }
+
+  /* ---- açılış terminali ---- */
+  function termLine(html) {
+    const d = document.createElement('div'); d.innerHTML = html; term.append(d);
+  }
+  const TERM = [
+    [80,   () => termLine('<span class="req">›</span> GET / HTTP/2 · eneskaraviranli.codes')],
+    [520,  () => termLine(`<span class="ok">‹ 200</span> index.html · ${Math.round(document.documentElement.outerHTML.length / 1024)} KB`)],
+    [1000, () => termLine(`<span class="req">›</span> HTML ayrıştırılıyor · ${document.getElementsByTagName('*').length} düğüm`)],
+    [2350, () => termLine('<span class="req">›</span> GET /style.css')],
+    [2750, () => termLine(`<span class="ok">‹ 200</span> style.css · ${Math.round(cssMain.textContent.length / 1024)} KB`)],
+    [2950, () => termLine('<span class="req">›</span> CSS uygulanıyor · ajanlar yerleştiriyor…')],
+  ];
+
+  /* ---- CSS'i aç: FLIP — öğeler çıplak HTML'deki yerinde kalsın, ajanlar taşısın ---- */
+  function applyCss(now) {
+    const first = heroItems.map(el => el.getBoundingClientRect());
+    cssMain.media = 'all';
+    root.classList.remove('boot', 'boot-blank');
+    nav.classList.add('on');
+    heroItems.forEach(el => { el.style.transition = 'none'; el.classList.add('built'); });
+    void document.body.offsetHeight; // yeni yerleşimi hesaplat
+    heroItems.forEach((el, k) => {
+      const base = el.classList.contains('giant') ? ' translateX(-50%)' : '';
+      el.style.transform = base; // ölçüm için sade hal
+      const last = el.getBoundingClientRect();
+      const fy = Math.max(-60, Math.min(innerHeight + 40, first[k].top));
+      el.__drag = { dx: first[k].left - last.left, dy: fy - last.top, base };
+      el.style.transform = `translate(${el.__drag.dx}px,${el.__drag.dy}px)${base}`;
+    });
+    dragQ = heroItems.slice();
+    stage = 'build'; stageT = now; t0 = now; doneAt = null;
+    sections.forEach(s => io.observe(s));
   }
 
   function ctaTarget() {
@@ -784,45 +1000,116 @@ document.getElementById('copy').addEventListener('click', async e=>{
     $('st-count').textContent = `${built}/${total} öğe`;
     $('st-bar').style.width = (built / total * 100) + '%';
     let s;
-    if (stage === 'loading') s = 'Başlatılıyor';
+    if (stage === 'blank') s = 'Boş sayfa';
+    else if (stage === 'html') s = 'HTML yükleniyor';
+    else if (stage === 'raw') s = 'CSS bekleniyor';
+    else if (dragQ.length || agents.some(a => a.task && a.task.drag)) s = 'Yerleştiriliyor';
     else if (built >= total) { if (!doneAt) doneAt = now; s = `Tamamlandı · ${((doneAt - t0) / 1000).toFixed(1)}sn`; }
-    else if (agents.some(a => a.task) || queue.length) s = canvasOn ? 'Tel kafes çiziliyor' : 'İnşa ediliyor';
+    else if (agents.some(a => a.task) || queue.length) s = 'İnşa ediliyor';
     else s = 'Kaydırmayı bekliyor';
     $('st-state').textContent = s;
   }
 
+  const ease = p => p < .5 ? 4 * p * p * p : 1 - Math.pow(-2 * p + 2, 3) / 2;
   let lastStatus = 0;
-  function tick(now) {
-    if (stage === 'loading') {
-      const p = Math.min(1, (now - stageT) / 1700);
-      $('ld-text').textContent = `sayfa derleniyor · ${Math.round(p * 100)}%`;
-      const cx = innerWidth / 2 + scrollX, cy = innerHeight / 2 + scrollY - 8;
-      for (const a of agents) {
-        const dir = a.i % 3 === 0 ? -1 : 1;
-        const ang = now * .0016 * dir + a.i * 2.39;
-        const rr = 44 + 30 * Math.sin(now * .0021 + a.seed) + (a.i % 4) * 6;
-        a.tx = cx + Math.cos(ang) * rr; a.ty = cy + Math.sin(ang) * rr * .8;
+
+  function bootTick(now) {
+    const t = now - stageT;
+    while (termStep < TERM.length && t >= TERM[termStep][0]) TERM[termStep++][1]();
+    if (stage === 'blank' && t >= 900) { stage = 'html'; root.classList.remove('boot-blank'); }
+    if (stage === 'html') {
+      // beyaz perde yukarıdan aşağı çekilir: çıplak HTML satır satır "yüklenir"
+      const p = Math.min(1, (t - 900) / 1300);
+      curtain.style.top = (ease(p) * (innerHeight + 4)) + 'px';
+      if (p >= 1) stage = 'raw';
+    }
+    if (stage === 'raw' && t >= 2950) applyCss(now);
+    const scanY = stage === 'html' ? parseFloat(curtain.style.top) || 0 : null;
+    for (const a of agents) {
+      if (scanY !== null) {
+        // perdeyle birlikte aşağı inen tarayıcı sırası
+        a.tx = (a.i + .5) / N * innerWidth + Math.sin(now * .003 + a.seed) * 12;
+        a.ty = scanY + scrollY - 6 + Math.cos(now * .004 + a.seed) * 5;
+        a.x += (a.tx - a.x) * .2; a.y += (a.ty - a.y) * .2;
+      } else if (stage === 'raw') {
+        // çıplak HTML'deki öğelerin üzerine dağılıp bekler
+        const el = heroItems[a.i % heroItems.length], r = el.getBoundingClientRect();
+        a.tx = r.left + scrollX + 6 + (a.i % 3) * 7; a.ty = r.top + scrollY + 6;
         a.x += (a.tx - a.x) * .1; a.y += (a.ty - a.y) * .1;
-        a.op += (1 - a.op) * .08;
-        a.el.style.transform = `translate(${a.x}px,${a.y}px)`; a.el.style.opacity = a.op;
+      } else {
+        if (now > a.next) {
+          a.tx = innerWidth * (.15 + Math.random() * .7); a.ty = innerHeight * (.1 + Math.random() * .4);
+          a.next = now + 500 + Math.random() * 800;
+        }
+        a.x += (a.tx - a.x) * .05; a.y += (a.ty - a.y) * .05;
       }
-      if (p >= 1) beginBuild(now);
+      a.op += (1 - a.op) * .06;
+      a.el.style.transform = `translate(${a.x}px,${a.y}px)`;
+      a.el.style.opacity = a.op.toFixed(3);
+    }
+  }
+
+  function tick(now) {
+    if (stage !== 'build') {
+      bootTick(now);
       if (now - lastStatus > 120) { updateStatus(now); lastStatus = now; }
       return requestAnimationFrame(tick);
     }
+    if (TERM.length > termStep) while (termStep < TERM.length) TERM[termStep++][1]();
+    if (!dragQ.length && !agents.some(a => a.task && a.task.drag) && !root.classList.contains('boot-done')) {
+      root.classList.add('boot-done'); heroItems.forEach(el => { el.style.transition = ''; });
+    }
 
-    const ring = queue.length ? null : ctaTarget();
+    const ring = (queue.length || dragQ.length || jobs.length) ? null : ctaTarget();
     let freeIdx = 0;
     for (const a of agents) {
-      if (!a.task && queue.length) {
+      if (!a.task && dragQ.length) {
+        const el = dragQ.shift();
+        a.task = { el, drag: true, phase: 'grab', t: now + (a.i % 6) * 40 };
+      } else if (!a.task && queue.length) {
         const el = queue.shift(), r = docRect(el);
         a.task = { el, r, phase: 'go', t: now + Math.random() * 120 };
         a.tx = r.x; a.ty = r.y;
+      } else if (!a.task && jobs.length) {
+        const j = jobs.shift(), p = j.getPoint && j.getPoint();
+        if (p) a.task = { phase: 'job', j, p, t: now }; else { try { j.onArrive(); } catch (e) {} }
       }
       const tk = a.task;
       let wantOp = 1;
       if (tk) {
-        if (tk.phase === 'go') {
+        if (tk.phase === 'grab') {
+          // öğenin şu anki (çıplak HTML'deki) köşesine git
+          const r = tk.el.getBoundingClientRect();
+          a.tx = r.left + scrollX + 8; a.ty = r.top + scrollY + 8;
+          if (now >= tk.t) { a.x += (a.tx - a.x) * .22; a.y += (a.ty - a.y) * .22; }
+          if (Math.hypot(a.tx - a.x, a.ty - a.y) < 4 || now - tk.t > 700) {
+            const d = tk.el.__drag;
+            const box = docRect(tk.el);
+            tk.box = makeBox(a, tk.el, box, 'sürükle');
+            tk.box.style.width = box.w + 'px'; tk.box.style.height = box.h + 'px';
+            tk.last = { x: box.x - d.dx, y: box.y - d.dy };
+            tk.phase = 'drag'; tk.t = now; tk.dur = 520 + Math.min(500, Math.hypot(d.dx, d.dy) * .6);
+            ripple(a.x, a.y, a.color);
+          }
+        } else if (tk.phase === 'drag') {
+          const d = tk.el.__drag, p = Math.min(1, (now - tk.t) / tk.dur), e = ease(p);
+          const cx = d.dx * (1 - e), cy = d.dy * (1 - e);
+          tk.el.style.transform = `translate(${cx}px,${cy}px)${d.base}`;
+          tk.box.style.left = (tk.last.x + cx) + 'px'; tk.box.style.top = (tk.last.y + cy) + 'px';
+          a.x = tk.last.x + cx + 8; a.y = tk.last.y + cy + 8;
+          if (p === 1) {
+            tk.el.style.transform = ''; delete tk.el.__drag; built++;
+            ripple(a.x, a.y, a.color);
+            tk.phase = 'hold'; tk.t = now;
+          }
+        } else if (tk.phase === 'job') {
+          a.x += (tk.p.x - a.x) * .16; a.y += (tk.p.y - a.y) * .16;
+          if (Math.hypot(tk.p.x - a.x, tk.p.y - a.y) < 3 || now - tk.t > 1100) {
+            ripple(tk.p.x, tk.p.y, a.color);
+            try { tk.j.onArrive(); } catch (e) {}
+            a.task = null; a.next = now + 300;
+          }
+        } else if (tk.phase === 'go') {
           if (now >= tk.t) { a.x += (a.tx - a.x) * .17; a.y += (a.ty - a.y) * .17; }
           if (Math.hypot(a.tx - a.x, a.ty - a.y) < 4 || now - tk.t > 850) {
             tk.r = docRect(tk.el); a.x = tk.r.x; a.y = tk.r.y;
@@ -834,12 +1121,9 @@ document.getElementById('copy').addEventListener('click', async e=>{
           tk.box.style.width = w + 'px'; tk.box.style.height = h + 'px';
           a.x = tk.r.x + w; a.y = tk.r.y + h;
           if (p > .35 && !tk.el.classList.contains('wire')) tk.el.classList.add('wire');
-          if (p === 1) {
-            // tel kafes bir an görünsün, sonra içerik dolsun
-            tk.phase = 'wire'; tk.t = now;
-          }
+          if (p === 1) { tk.phase = 'wire'; tk.t = now; }
         } else if (tk.phase === 'wire') {
-          if (now - tk.t > (canvasOn ? 380 : 140)) {
+          if (now - tk.t > 160) {
             const el = tk.el;
             el.classList.remove('wire'); el.classList.add('built'); built++;
             if (texts.has(el)) {
@@ -864,7 +1148,7 @@ document.getElementById('copy').addEventListener('click', async e=>{
           if (now - tk.t > 200) { tk.phase = 'hold'; tk.t = now; }
         } else if (tk.phase === 'hold') {
           if (now - tk.t > 200) {
-            const b = tk.box; b.style.opacity = 0; setTimeout(() => b.remove(), 260);
+            const b = tk.box; if (b) { b.style.opacity = 0; setTimeout(() => b.remove(), 260); }
             a.task = null; a.next = 0;
           }
         }
@@ -890,11 +1174,6 @@ document.getElementById('copy').addEventListener('click', async e=>{
       a.el.style.transform = `translate(${a.x}px,${a.y}px)`;
       a.el.style.opacity = a.op.toFixed(3);
     }
-
-    // hero tamamlanınca gri tuvali kaldır, siyah tema "boyansın"
-    if (canvasOn && heroItems.every(e => e.classList.contains('built')) && !agents.some(a => a.task && heroItems.includes(a.task.el))) {
-      canvasOn = false; setTimeout(() => canvas.classList.remove('on'), 250);
-    }
     if (now - lastStatus > 120) { updateStatus(now); lastStatus = now; }
     requestAnimationFrame(tick);
   }
@@ -902,14 +1181,16 @@ document.getElementById('copy').addEventListener('click', async e=>{
   $('replay').addEventListener('click', () => {
     io.disconnect();
     agents.forEach(a => { if (a.task) { a.task.box && a.task.box.remove(); a.task.caret && a.task.caret.remove(); } a.task = null; });
-    layer.querySelectorAll('.selbox,.cross').forEach(b => b.remove()); crosses.clear();
+    layer.querySelectorAll('.selbox,.ripple').forEach(b => b.remove());
     texts.forEach(nodes => nodes.forEach(([n, v]) => n.nodeValue = v));
-    items.forEach(i => { i.classList.remove('built', 'wire'); i.style.minHeight = ''; });
-    nav.classList.remove('on'); canvas.classList.remove('on'); canvasOn = false;
-    queue = []; queued = new Set(); built = 0;
+    items.forEach(i => { i.classList.remove('built', 'wire'); i.style.minHeight = ''; i.style.transform = ''; i.style.transition = ''; delete i.__drag; });
+    nav.classList.remove('on');
+    queue = []; queued = new Set(); dragQ = []; jobs = []; built = 0; termStep = 0;
+    term.innerHTML = ''; curtain.style.top = '0px';
+    cssMain.media = 'not all';
+    root.classList.remove('boot-done'); root.classList.add('boot', 'boot-blank');
     window.scrollTo({ top: 0, behavior: 'instant' });
-    loader.classList.remove('off');
-    stage = 'loading'; stageT = performance.now();
+    stage = 'blank'; stageT = performance.now();
   });
 
   requestAnimationFrame(tick);
@@ -959,6 +1240,7 @@ async function avcıDrone(){await takım.kaptan(enes);return"görev tamam";}`).r
 
   function layout() {
     if (!data) return;
+    if (document.documentElement.classList.contains('boot')) return; // çıplak HTML aşamasında çizme; CSS gelince ResizeObserver tekrar çağırır
     const r = card.getBoundingClientRect();
     if (!r.width) return;
     W = r.width; H = r.height; dpr = Math.min(2, devicePixelRatio || 1);
@@ -1045,5 +1327,8 @@ async function avcıDrone(){await takım.kaptan(enes);return"görev tamam";}`).r
   requestAnimationFrame(loop);
 })();
 </script>
+<script src="js/gcs.js"></script>
+<script src="js/kesim.js"></script>
+<script src="js/fx.js"></script>
 </body>
 </html>
