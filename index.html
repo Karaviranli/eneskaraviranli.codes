@@ -69,6 +69,7 @@
 :root{--bg:#060606;--line:#1e1e21;--line2:#2a2a2e;--mute:#8b8b92;--dim:#5c5c63;--red:#ff3d3d;--red2:#e3262d;--blue:#3ea2ff;--green:#3dff8f;--mono:'JetBrains Mono',ui-monospace,monospace}
 body{transition:background-color 1.1s ease,color 1.1s ease}
 html.boot #codeport{display:none}
+html.raw-fade main,html.raw-fade nav{opacity:0;transition:opacity .3s ease}
 .ruler{display:none!important}
 .grabbed{outline:1px dashed rgba(62,162,255,.75);outline-offset:5px;box-shadow:0 24px 60px rgba(0,0,0,.45)}
 .status{transition:opacity .5s}.status.idle{opacity:.35}.status.idle:hover{opacity:1}
@@ -977,7 +978,7 @@ document.getElementById('copy').addEventListener('click', async e=>{
   function applyCss(now) {
     const first = heroItems.map(el => el.getBoundingClientRect());
     cssMain.media = 'all';
-    root.classList.remove('boot', 'boot-blank');
+    root.classList.remove('boot', 'boot-blank', 'raw-fade');
     nav.classList.add('on');
     heroItems.forEach(el => { el.style.transition = 'none'; el.classList.add('built'); });
     void document.body.offsetHeight; // yeni yerleşimi hesaplat
@@ -988,7 +989,7 @@ document.getElementById('copy').addEventListener('click', async e=>{
       const fy = Math.max(-60, Math.min(innerHeight + 40, first[k].top));
       el.__drag = { dx: first[k].left - last.left, dy: fy - last.top, base };
       el.style.transform = `translate(${el.__drag.dx}px,${el.__drag.dy}px)${base}`;
-      el.style.opacity = '.14';
+      el.style.opacity = '0';
     });
     dragQ = heroItems.slice();
     stage = 'build'; stageT = now; t0 = now; doneAt = null;
@@ -1031,6 +1032,7 @@ document.getElementById('copy').addEventListener('click', async e=>{
       curtain.style.top = (ease(p) * (innerHeight + 4)) + 'px';
       if (p >= 1) stage = 'raw';
     }
+    if (stage === 'raw' && t >= 2600) root.classList.add('raw-fade'); // çıplak HTML yumuşakça söner
     if (stage === 'raw' && t >= 2950) applyCss(now);
     const scanY = stage === 'html' ? parseFloat(curtain.style.top) || 0 : null;
     for (const a of agents) {
@@ -1081,8 +1083,8 @@ document.getElementById('copy').addEventListener('click', async e=>{
     const ring = (queue.length || dragQ.length || jobs.length) ? null : ctaTarget();
     let freeIdx = 0;
     for (const a of agents) {
-      if (!a.task && dragQ.length && dragging < 3 && now >= nextDrag) {
-        const el = dragQ.shift(); dragging++; nextDrag = now + 170;
+      if (!a.task && dragQ.length && dragging < 2 && now >= nextDrag) {
+        const el = dragQ.shift(); dragging++; nextDrag = now + 210;
         a.task = { el, drag: true, phase: 'grab', t: now };
       } else if (!a.task && queue.length) {
         let k = queue.findIndex(e => { const q = e.getBoundingClientRect(); return q.top < innerHeight && q.bottom > 0; });
@@ -1206,7 +1208,7 @@ document.getElementById('copy').addEventListener('click', async e=>{
     queue = []; queued = new Set(); dragQ = []; jobs = []; built = 0; termStep = 0; dragging = 0; nextDrag = 0; queuedAt.clear();
     term.innerHTML = ''; curtain.style.top = '0px';
     cssMain.media = 'not all';
-    root.classList.remove('boot-done'); root.classList.add('boot', 'boot-blank');
+    root.classList.remove('boot-done', 'raw-fade'); root.classList.add('boot', 'boot-blank');
     window.scrollTo({ top: 0, behavior: 'instant' });
     stage = 'blank'; stageT = performance.now();
   });
