@@ -68,7 +68,7 @@
     // bantlar: sabit hız + kaydırma hızına göre ivme
     for (const b of bands) {
       if (!b.w) continue;
-      b.x -= (0.6 + Math.abs(vel) * .35) * b.dir * (vel < 0 ? -1 : 1);
+      b.x -= (0.32 + Math.abs(vel) * .2) * b.dir * (vel < 0 ? -1 : 1);
       if (b.x <= -b.w) b.x += b.w; if (b.x > 0) b.x -= b.w;
       b.track.style.transform = `translate3d(${b.x}px,0,0)`;
     }
