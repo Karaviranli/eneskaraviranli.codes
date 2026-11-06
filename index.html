@@ -913,6 +913,7 @@ document.getElementById('copy').addEventListener('click', async e=>{
 
   let queue = [], queued = new Set(), dragQ = [], jobs = [], built = 0, t0 = 0, doneAt = null;
   let dragging = 0, nextDrag = 0; // aynı anda en çok 3 öğe taşınır
+  const queuedAt = new Map();
   let stage = 'blank', stageT = performance.now(), termStep = 0;
   const total = items.length;
 
@@ -922,7 +923,7 @@ document.getElementById('copy').addEventListener('click', async e=>{
   };
 
   function enqueue(list) {
-    list.forEach(el => { if (!queued.has(el) && !el.classList.contains('built')) { queued.add(el); queue.push(el); } });
+    list.forEach(el => { if (!queued.has(el) && !el.classList.contains('built')) { queued.add(el); queue.push(el); queuedAt.set(el, performance.now()); } });
   }
   const io = new IntersectionObserver(entries => {
     entries.forEach(en => { if (en.isIntersecting) enqueue([...en.target.querySelectorAll('[data-b]')]); });
@@ -1067,6 +1068,16 @@ document.getElementById('copy').addEventListener('click', async e=>{
       root.classList.add('boot-done'); heroItems.forEach(el => { el.style.transition = ''; });
     }
 
+    // Kaydırırken bekletme: ekrandaki öğe 500 ms'den uzun sırada kaldıysa ya da ekranın üstünden geçildiyse ajansız hemen göster
+    if (queue.length) {
+      queue = queue.filter(el => {
+        const r = el.getBoundingClientRect();
+        const passed = r.bottom < -40;
+        const waited = r.top < innerHeight && r.bottom > 0 && now - (queuedAt.get(el) || now) > 500;
+        if (passed || waited) { el.classList.add('built'); built++; return false; }
+        return true;
+      });
+    }
     const ring = (queue.length || dragQ.length || jobs.length) ? null : ctaTarget();
     let freeIdx = 0;
     for (const a of agents) {
@@ -1074,8 +1085,9 @@ document.getElementById('copy').addEventListener('click', async e=>{
         const el = dragQ.shift(); dragging++; nextDrag = now + 170;
         a.task = { el, drag: true, phase: 'grab', t: now };
       } else if (!a.task && queue.length) {
-        const el = queue.shift(), r = docRect(el);
-        a.task = { el, r, phase: 'go', t: now + Math.random() * 120 };
+        let k = queue.findIndex(e => { const q = e.getBoundingClientRect(); return q.top < innerHeight && q.bottom > 0; });
+        const el = queue.splice(k < 0 ? 0 : k, 1)[0], r = docRect(el);
+        a.task = { el, r, phase: 'go', t: now + Math.random() * 50 };
         a.tx = r.x; a.ty = r.y;
       } else if (!a.task && jobs.length) {
         const j = jobs.shift(), p = j.getPoint && j.getPoint();
@@ -1116,26 +1128,26 @@ document.getElementById('copy').addEventListener('click', async e=>{
             a.task = null; a.next = now + 300;
           }
         } else if (tk.phase === 'go') {
-          if (now >= tk.t) { a.x += (a.tx - a.x) * .17; a.y += (a.ty - a.y) * .17; }
-          if (Math.hypot(a.tx - a.x, a.ty - a.y) < 4 || now - tk.t > 850) {
+          if (now >= tk.t) { a.x += (a.tx - a.x) * .28; a.y += (a.ty - a.y) * .28; }
+          if (Math.hypot(a.tx - a.x, a.ty - a.y) < 6 || now - tk.t > 450) {
             tk.r = docRect(tk.el); a.x = tk.r.x; a.y = tk.r.y;
             tk.box = makeBox(a, tk.el, tk.r); tk.phase = 'draw'; tk.t = now;
           }
         } else if (tk.phase === 'draw') {
-          const p = Math.min(1, (now - tk.t) / 300), e = 1 - Math.pow(1 - p, 3);
+          const p = Math.min(1, (now - tk.t) / 190), e = 1 - Math.pow(1 - p, 3);
           const w = tk.r.w * e, h = tk.r.h * e;
           tk.box.style.width = w + 'px'; tk.box.style.height = h + 'px';
           a.x = tk.r.x + w; a.y = tk.r.y + h;
           if (p > .35 && !tk.el.classList.contains('wire')) tk.el.classList.add('wire');
           if (p === 1) { tk.phase = 'wire'; tk.t = now; }
         } else if (tk.phase === 'wire') {
-          if (now - tk.t > 160) {
+          if (now - tk.t > 80) {
             const el = tk.el;
             el.classList.remove('wire'); el.classList.add('built'); built++;
             if (texts.has(el)) {
               const nodes = texts.get(el);
               tk.len = nodes.reduce((s, [, v]) => s + v.length, 0);
-              tk.dur = Math.max(260, Math.min(1150, tk.len * 12));
+              tk.dur = Math.max(180, Math.min(480, tk.len * 9));
               el.style.minHeight = tk.r.h + 'px';
               tk.caret = document.createElement('span'); tk.caret.className = 'caret';
               writeText(nodes, 0, tk.caret);
@@ -1151,9 +1163,9 @@ document.getElementById('copy').addEventListener('click', async e=>{
           a.x += (cr.left + scrollX + 4 - a.x) * .35; a.y += (cr.bottom + scrollY - 2 - a.y) * .35;
           if (p === 1) { tk.caret.remove(); writeText(texts.get(tk.el), tk.len, null); tk.el.style.minHeight = ''; tk.phase = 'hold'; tk.t = now; }
         } else if (tk.phase === 'paint') {
-          if (now - tk.t > 200) { tk.phase = 'hold'; tk.t = now; }
+          if (now - tk.t > 90) { tk.phase = 'hold'; tk.t = now; }
         } else if (tk.phase === 'hold') {
-          if (now - tk.t > 200) {
+          if (now - tk.t > 120) {
             const b = tk.box; if (b) { b.style.opacity = 0; setTimeout(() => b.remove(), 260); }
             a.task = null; a.next = 0;
           }
@@ -1191,7 +1203,7 @@ document.getElementById('copy').addEventListener('click', async e=>{
     texts.forEach(nodes => nodes.forEach(([n, v]) => n.nodeValue = v));
     items.forEach(i => { i.classList.remove('built', 'wire', 'grabbed'); i.style.minHeight = ''; i.style.transform = ''; i.style.transition = ''; i.style.opacity = ''; delete i.__drag; });
     nav.classList.remove('on');
-    queue = []; queued = new Set(); dragQ = []; jobs = []; built = 0; termStep = 0; dragging = 0; nextDrag = 0;
+    queue = []; queued = new Set(); dragQ = []; jobs = []; built = 0; termStep = 0; dragging = 0; nextDrag = 0; queuedAt.clear();
     term.innerHTML = ''; curtain.style.top = '0px';
     cssMain.media = 'not all';
     root.classList.remove('boot-done'); root.classList.add('boot', 'boot-blank');
