@@ -966,12 +966,12 @@ document.getElementById('copy').addEventListener('click', async e=>{
     const d = document.createElement('div'); d.innerHTML = html; term.append(d);
   }
   const TERM = [
-    [80,   () => termLine('<span class="req">›</span> GET / HTTP/2 · eneskaraviranli.codes')],
-    [520,  () => termLine(`<span class="ok">‹ 200</span> index.html · ${Math.round(document.documentElement.outerHTML.length / 1024)} KB`)],
-    [1000, () => termLine(`<span class="req">›</span> HTML ayrıştırılıyor · ${document.getElementsByTagName('*').length} düğüm`)],
-    [2350, () => termLine('<span class="req">›</span> GET /style.css')],
-    [2750, () => termLine(`<span class="ok">‹ 200</span> style.css · ${Math.round(cssMain.textContent.length / 1024)} KB`)],
-    [2950, () => termLine('<span class="req">›</span> CSS uygulanıyor · ajanlar yerleştiriyor…')],
+    [60,   () => termLine('<span class="req">›</span> GET / HTTP/2 · eneskaraviranli.codes')],
+    [300,  () => termLine(`<span class="ok">‹ 200</span> index.html · ${Math.round(document.documentElement.outerHTML.length / 1024)} KB`)],
+    [560,  () => termLine(`<span class="req">›</span> HTML ayrıştırılıyor · ${document.getElementsByTagName('*').length} düğüm`)],
+    [1300, () => termLine('<span class="req">›</span> GET /style.css')],
+    [1500, () => termLine(`<span class="ok">‹ 200</span> style.css · ${Math.round(cssMain.textContent.length / 1024)} KB`)],
+    [1700, () => termLine('<span class="req">›</span> CSS uygulanıyor · ajanlar yerleştiriyor…')],
   ];
 
   /* ---- CSS'i aç: FLIP — öğeler çıplak HTML'deki yerinde kalsın, ajanlar taşısın ---- */
@@ -995,6 +995,21 @@ document.getElementById('copy').addEventListener('click', async e=>{
     stage = 'build'; stageT = now; t0 = now; doneAt = null;
     sections.forEach(s => io.observe(s));
   }
+
+  function skipIntro() {
+    if (root.classList.contains('boot-done')) return;
+    if (stage !== 'build') { curtain.style.top = (innerHeight + 4) + 'px'; applyCss(performance.now()); }
+    const moving = agents.filter(a => a.task && a.task.drag && a.task.phase !== 'hold');
+    dragQ.concat(moving.map(a => a.task.el)).forEach(el => {
+      el.style.transform = ''; el.style.opacity = ''; el.classList.remove('grabbed'); delete el.__drag; built++;
+    });
+    moving.forEach(a => { a.task = null; });
+    dragQ = []; dragging = 0;
+  }
+  ['wheel', 'touchstart', 'keydown', 'pointerdown'].forEach(ev => addEventListener(ev, e => {
+    if (e.target && e.target.closest && e.target.closest('#replay')) return;
+    skipIntro();
+  }, { passive: true }));
 
   function ctaTarget() {
     const cta = $('cta'), r = cta.getBoundingClientRect();
@@ -1025,15 +1040,15 @@ document.getElementById('copy').addEventListener('click', async e=>{
   function bootTick(now) {
     const t = now - stageT;
     while (termStep < TERM.length && t >= TERM[termStep][0]) TERM[termStep++][1]();
-    if (stage === 'blank' && t >= 900) { stage = 'html'; root.classList.remove('boot-blank'); }
+    if (stage === 'blank' && t >= 500) { stage = 'html'; root.classList.remove('boot-blank'); }
     if (stage === 'html') {
       // beyaz perde yukarıdan aşağı çekilir: çıplak HTML satır satır "yüklenir"
-      const p = Math.min(1, (t - 900) / 1300);
+      const p = Math.min(1, (t - 500) / 800);
       curtain.style.top = (ease(p) * (innerHeight + 4)) + 'px';
       if (p >= 1) stage = 'raw';
     }
-    if (stage === 'raw' && t >= 2600) root.classList.add('raw-fade'); // çıplak HTML yumuşakça söner
-    if (stage === 'raw' && t >= 2950) applyCss(now);
+    if (stage === 'raw' && t >= 1450) root.classList.add('raw-fade'); // çıplak HTML yumuşakça söner
+    if (stage === 'raw' && t >= 1700) applyCss(now);
     const scanY = stage === 'html' ? parseFloat(curtain.style.top) || 0 : null;
     for (const a of agents) {
       if (scanY !== null) {
@@ -1083,8 +1098,8 @@ document.getElementById('copy').addEventListener('click', async e=>{
     const ring = (queue.length || dragQ.length || jobs.length) ? null : ctaTarget();
     let freeIdx = 0;
     for (const a of agents) {
-      if (!a.task && dragQ.length && dragging < 2 && now >= nextDrag) {
-        const el = dragQ.shift(); dragging++; nextDrag = now + 210;
+      if (!a.task && dragQ.length && dragging < 6 && now >= nextDrag) {
+        const el = dragQ.shift(); dragging++; nextDrag = now + 110;
         a.task = { el, drag: true, phase: 'grab', t: now };
       } else if (!a.task && queue.length) {
         let k = queue.findIndex(e => { const q = e.getBoundingClientRect(); return q.top < innerHeight && q.bottom > 0; });
@@ -1102,14 +1117,14 @@ document.getElementById('copy').addEventListener('click', async e=>{
           // öğenin şu anki (çıplak HTML'deki) köşesine git
           const r = tk.el.getBoundingClientRect();
           a.tx = r.left + scrollX + 10; a.ty = r.top + scrollY + 10;
-          a.x += (a.tx - a.x) * .2; a.y += (a.ty - a.y) * .2;
-          if (Math.hypot(a.tx - a.x, a.ty - a.y) < 4 || now - tk.t > 650) {
+          a.x += (a.tx - a.x) * .32; a.y += (a.ty - a.y) * .32;
+          if (Math.hypot(a.tx - a.x, a.ty - a.y) < 6 || now - tk.t > 300) {
             const d = tk.el.__drag, box = docRect(tk.el);
             tk.last = { x: box.x - d.dx, y: box.y - d.dy };
             tk.el.classList.add('grabbed');
             tk.el.style.transition = 'opacity .3s ease';
             tk.el.style.opacity = '1';
-            tk.phase = 'drag'; tk.t = now; tk.dur = 650 + Math.min(450, Math.hypot(d.dx, d.dy) * .35);
+            tk.phase = 'drag'; tk.t = now; tk.dur = 380 + Math.min(220, Math.hypot(d.dx, d.dy) * .18);
           }
         } else if (tk.phase === 'drag') {
           const d = tk.el.__drag, p = Math.min(1, (now - tk.t) / tk.dur), e = easeOut(p);
