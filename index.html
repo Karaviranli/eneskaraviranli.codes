@@ -5,11 +5,62 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Mehmet Enes Karaviranlı — Yazılım Mühendisi</title>
 <meta name="description" content="Mehmet Enes Karaviranlı — Yazılım Mühendisi. Kavira Software ERP/MES ürünleri, İkarus İHA arayüz yazılımları, mobil ve web uygulamaları.">
+<link rel="canonical" href="https://eneskaraviranli.codes/">
+<meta name="author" content="Mehmet Enes Karaviranlı">
+<meta name="robots" content="index, follow">
+<meta property="og:type" content="profile">
+<meta property="og:locale" content="tr_TR">
+<meta property="og:site_name" content="Mehmet Enes Karaviranlı">
+<meta property="og:title" content="Mehmet Enes Karaviranlı — Yazılım Mühendisi">
+<meta property="og:description" content="Kavira Software ile 12 canlı ERP/MES ürünü, İkarus İHA yer kontrol istasyonları, mobil ve web uygulamaları.">
+<meta property="og:url" content="https://eneskaraviranli.codes/">
+<meta property="og:image" content="https://eneskaraviranli.codes/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Mehmet Enes Karaviranlı — Yazılım Mühendisi portfolyosu">
+<meta property="profile:first_name" content="Mehmet Enes">
+<meta property="profile:last_name" content="Karaviranlı">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Mehmet Enes Karaviranlı — Yazılım Mühendisi">
+<meta name="twitter:description" content="Kavira Software ile 12 canlı ERP/MES ürünü, İkarus İHA yer kontrol istasyonları, mobil ve web uygulamaları.">
+<meta name="twitter:image" content="https://eneskaraviranli.codes/og-image.png">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "ProfilePage",
+  "url": "https://eneskaraviranli.codes/",
+  "name": "Mehmet Enes Karaviranlı — Yazılım Mühendisi",
+  "inLanguage": "tr",
+  "mainEntity": {
+    "@type": "Person",
+    "name": "Mehmet Enes Karaviranlı",
+    "alternateName": ["Enes Karaviranlı", "Enes"],
+    "url": "https://eneskaraviranli.codes/",
+    "image": "https://eneskaraviranli.codes/og-image.png",
+    "jobTitle": "Yazılım Mühendisi",
+    "email": "mailto:m.eneskaraviranli@gmail.com",
+    "worksFor": { "@type": "Organization", "name": "Kavira Software" },
+    "affiliation": [
+      { "@type": "CollegeOrUniversity", "name": "Samsun Üniversitesi" },
+      { "@type": "Organization", "name": "İkarus Havacılık" }
+    ],
+    "knowsAbout": ["Yazılım Mühendisliği", "ERP", "MES", "SaaS", "İHA Yer Kontrol İstasyonu", "MAVLink", "Python", "FastAPI", "Flutter", "React", "React Native", "TypeScript", "C#", ".NET", "Yapay Zekâ"],
+    "sameAs": [
+      "https://github.com/Karaviranli",
+      "https://www.linkedin.com/in/enes-karaviranl%C4%B1/"
+    ]
+  }
+}
+</script>
 <link rel="icon" href="favicon.svg" type="image/svg+xml">
 <link rel="icon" href="favicon-32.png" sizes="32x32" type="image/png">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
 <meta name="theme-color" content="#060606">
-<script>document.documentElement.classList.add('js')</script>
+<script>
+  // Arama motoru ve önizleme botlarına animasyonsuz, tamamen açık sayfa göster
+  window.__STATIC = /bot|crawl|spider|slurp|bingpreview|lighthouse|facebookexternalhit|whatsapp|telegram|discord|linkedin|twitter|embedly|quora|pinterest|vkshare|skype/i.test(navigator.userAgent);
+  if (!window.__STATIC) document.documentElement.classList.add('js');
+</script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Anton&family=Caveat:wght@700&family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
@@ -570,12 +621,14 @@ showLayer(0);
     document.title = '> ' + p.slice(0, n) + caret();
     timer = setTimeout(step, wait);
   }
+  // botlarda ve "hareketi azalt" açıkken başlık sabit kalır
+  if (window.__STATIC || matchMedia('(prefers-reduced-motion: reduce)').matches) return;
   document.addEventListener('visibilitychange', () => {
     clearTimeout(timer);
     if (document.hidden) { document.title = AWAY[awayIdx++ % AWAY.length]; }
     else { document.title = '> ' + PHRASES[i].slice(0, n); timer = setTimeout(step, 400); }
   });
-  if (!matchMedia('(prefers-reduced-motion: reduce)').matches) step();
+  step();
 })();
 
 /* ---------- Matris filtresi ---------- */
@@ -597,7 +650,7 @@ document.getElementById('copy').addEventListener('click', async e=>{
 /* ---------- Ajan imleçleri: sayfayı canlı inşa eder ---------- */
 (() => {
   const $ = id => document.getElementById(id);
-  const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const reduce = window.__STATIC || matchMedia('(prefers-reduced-motion: reduce)').matches;
   const items = [...document.querySelectorAll('[data-b]')];
   const status = $('status'), loader = $('loader'), canvas = $('canvas'), nav = document.querySelector('nav');
   if (reduce) {
@@ -870,7 +923,7 @@ document.getElementById('copy').addEventListener('click', async e=>{
   const cv = document.getElementById('codeport');
   if (!card || !cv) return;
   const ctx = cv.getContext('2d');
-  const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const reduce = window.__STATIC || matchMedia('(prefers-reduced-motion: reduce)').matches;
   const CODE = (`const enes={ad:"Mehmet Enes Karaviranlı",rol:"Yazılım Mühendisi",okul:"Samsun Üniversitesi",sınıf:3};
 function build(){return kavira.deploy({ürün:12,kullanıcı:"200+"});}
 while(true){ikarus.fly();if(!yeterliMi(kod))iyileştir(kod);}
