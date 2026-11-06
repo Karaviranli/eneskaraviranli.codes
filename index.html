@@ -6,6 +6,9 @@
 <title>Mehmet Enes Karaviranlı — Yazılım Mühendisi</title>
 <meta name="description" content="Mehmet Enes Karaviranlı — Yazılım Mühendisi. Kavira Software ERP/MES ürünleri, İkarus İHA arayüz yazılımları, mobil ve web uygulamaları.">
 <link rel="canonical" href="https://eneskaraviranli.codes/">
+<link rel="alternate" hreflang="tr" href="https://eneskaraviranli.codes/">
+<link rel="alternate" hreflang="en" href="https://eneskaraviranli.codes/en/">
+<link rel="alternate" hreflang="x-default" href="https://eneskaraviranli.codes/">
 <meta name="author" content="Mehmet Enes Karaviranlı">
 <meta name="robots" content="index, follow">
 <meta property="og:type" content="profile">
@@ -344,6 +347,27 @@ html.scrolling .ruler{opacity:1}
 #ruler-mark{left:0;width:16px;height:4px;background:var(--red)!important;box-shadow:0 0 10px var(--red)}
 
 
+.lang{font-family:var(--mono);font-size:10px;font-weight:700;color:var(--blue);text-decoration:none;border:1px solid rgba(62,162,255,.4);padding:3px 6px;border-radius:4px}
+.lang:hover{background:rgba(62,162,255,.12)}
+
+/* ---------- ZAMAN ÇİZELGESİ ---------- */
+.tl-head{margin-top:90px}
+.tl-title{font-size:clamp(22px,2.4vw,28px);font-weight:800;letter-spacing:-.02em}
+.tl{position:relative;margin-top:34px;padding-left:150px}
+.tl-line{position:absolute;left:118px;top:6px;bottom:6px;width:2px;background:var(--line2)}
+.tl-line i{position:absolute;left:0;top:0;width:100%;height:0;background:linear-gradient(var(--red),var(--red2));box-shadow:0 0 12px var(--red)}
+.tl-item{position:relative;display:flex;gap:0;padding:0 0 30px}
+.tl-item::before{content:"";position:absolute;left:-38px;top:6px;width:12px;height:12px;border-radius:50%;background:var(--bg);border:2px solid var(--red);box-shadow:0 0 0 4px var(--bg)}
+.tl-item.now::before{background:var(--red);animation:blink 1.4s infinite}
+.tl-y{position:absolute;left:-150px;width:96px;text-align:right;font-family:var(--cond);font-size:24px;line-height:1;color:var(--red)}
+.tl-item.now .tl-y{font-size:18px;color:var(--mute);padding-top:3px}
+.tl-c h4{font-size:16px;font-weight:700;margin-bottom:4px}
+.tl-c p{font-size:13.5px;color:var(--mute);max-width:620px;margin:0}
+.tl-c a{color:var(--blue);font-family:var(--mono);font-size:12px;white-space:nowrap}
+.case-link{display:inline-block;margin-top:12px;font-family:var(--mono);font-size:11px;font-weight:700;letter-spacing:.1em;color:var(--blue);border:1px solid rgba(62,162,255,.35);padding:7px 11px}
+.case-link:hover{background:rgba(62,162,255,.12)}
+@media (max-width:700px){.tl{padding-left:34px}.tl-line{left:6px}.tl-item::before{left:-34px}.tl-y{position:static;display:block;width:auto;text-align:left;font-size:20px;margin-bottom:6px}.tl-item{flex-direction:column}}
+
 /* ---------- KAYAN BANTLAR ---------- */
 .marquee{position:relative;z-index:1;overflow:hidden;border-top:1px solid var(--line);border-bottom:1px solid var(--line);padding:18px 0;background:rgba(0,0,0,.35)}
 .mq-track{display:flex;align-items:center;width:max-content;will-change:transform;white-space:nowrap}
@@ -463,6 +487,7 @@ html.scrolling .ruler{opacity:1}
     <a href="#hakkimda">Hakkımda</a><a href="#projeler">Projeler</a><a href="#yki">YKİ</a><a href="#kesim">Kesim</a><a href="#matris">Matris</a><a href="#iletisim">İletişim</a>
   </div>
   <div class="avail" data-b><span>Müsait</span><a href="#iletisim">İŞ BİRLİĞİ</a></div>
+  <a class="lang" href="en/" hreflang="en" data-b>EN</a>
 </nav>
 
 <main id="top">
@@ -545,6 +570,22 @@ html.scrolling .ruler{opacity:1}
         <div class="pr" data-b><div><h4>Takım Ruhu</h4><p>Kaptanlık ve yönetim deneyimiyle: iyi yazılım, iyi kurulmuş takımlardan çıkar.</p></div></div>
       </div>
     </div>
+
+    <div class="tl-head">
+      <div class="eyebrow" data-b>Yolculuk</div>
+      <h3 class="tl-title" data-b>İlk satırdan kaptanlığa</h3>
+    </div>
+    <div class="tl" id="tl">
+      <div class="tl-line" aria-hidden="true"><i id="tl-fill"></i></div>
+      <div class="tl-item" data-b><span class="tl-y">2023</span><div class="tl-c"><h4>İlk satırlar</h4><p>GitHub hesabımı açtım; web ve mobil üzerine kendi projelerimi geliştirmeye başladım.</p></div></div>
+      <div class="tl-item" data-b><span class="tl-y">2024</span><div class="tl-c"><h4>Yazılım Mühendisliği</h4><p>Samsun Üniversitesi Yazılım Mühendisliği'ne başladım. Algoritmalar, veri yapıları, nesne yönelimli tasarım.</p></div></div>
+      <div class="tl-item" data-b><span class="tl-y">2025</span><div class="tl-c"><h4>İkarus Havacılık</h4><p>Üniversitenin havacılık topluluğu İkarus'a katıldım ve İHA yer kontrol istasyonu arayüzleri yazmaya başladım.</p></div></div>
+      <div class="tl-item" data-b><span class="tl-y">2026</span><div class="tl-c"><h4>Kavira Software</h4><p>Atölyeler için hesap, kesim ve teklif yazılımları: 12 canlı ürün ve 200'ü aşkın kullanıcı. <a href="kavira.html">Vaka çalışması →</a></p></div></div>
+      <div class="tl-item" data-b><span class="tl-y">2026</span><div class="tl-c"><h4>Mansiyon ödülü</h4><p>Arayüz yazılımını geliştirdiğim İkarus takımıyla 2025-26 sezonunda mansiyon ödülü. <a href="ikarus.html">Vaka çalışması →</a></p></div></div>
+      <div class="tl-item" data-b><span class="tl-y">2026</span><div class="tl-c"><h4>Staj ve TÜBİTAK 2242</h4><p>Stajda .NET + Next.js ile veri kural motoru DataFlow; TÜBİTAK 2242 için SITL destekli otonom YKİ.</p></div></div>
+      <div class="tl-item" data-b><span class="tl-y">2026–27</span><div class="tl-c"><h4>Kaptanlık</h4><p>Avcı Drone takım kaptanı, Savaşan ve Sabit Kanat İHA yazılım danışmanı, İkarus yönetim ekibi.</p></div></div>
+      <div class="tl-item now" data-b><span class="tl-y">Sırada</span><div class="tl-c"><h4>Daha iyisi</h4><p>Her zaman daha iyisi yazılabilir.</p></div></div>
+    </div>
   </div>
 </section>
 
@@ -562,6 +603,7 @@ html.scrolling .ruler{opacity:1}
           <span class="pill">Ana proje · Kavira Software</span>
           <h3>Kavira — Doğrama &amp; Cephe Sektörü için ERP/MES Platformu</h3>
           <p class="d">Giyotin cam, cam balkon, alüminyum doğrama, kompozit, kepenk, tente ve pergola üreticileri için teklif, maliyet, metraj, kesim optimizasyonu ve fire hesabı yapan bulut tabanlı dikey SaaS ailesi. Tek bir hesap motoru, çok kiracılı altyapı ve her ürün grubuna özel arayüzler.</p>
+          <a class="case-link" href="kavira.html">VAKA ÇALIŞMASI →</a>
         </div>
         <span class="live">● CANLIDA</span>
       </div>
@@ -582,6 +624,7 @@ html.scrolling .ruler{opacity:1}
         <h3>İHA Yer Kontrol İstasyonları</h3>
         <p>Samsun Üniversitesi İkarus Havacılık takımı için MAVLink ile uçağa bağlanan yer kontrol istasyonları ve uçuşları toplayan takım platformu.</p>
         <ul><li>Telemetri, görev planlama &amp; uçuş kaydı</li><li>Uçuş arşivi ve 3D uçuş oynatma</li><li>Takımla birlikte mansiyon ödülü</li></ul>
+        <a class="case-link" href="ikarus.html">VAKA ÇALIŞMASI →</a>
         <div class="ft"><b>MAVLink · JS · Python</b><span>🏅 Mansiyon</span></div>
       </article>
       <article class="pc" data-b>

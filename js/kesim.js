@@ -9,13 +9,19 @@
   const K = k => document.querySelector(`[data-k="${k}"]`);
   const STATIC = window.__STATIC || matchMedia('(prefers-reduced-motion: reduce)').matches;
   const STOCK = 6000, KERF = 4;
+  const EN = document.documentElement.lang === 'en';
+  const W_ = EN
+    ? { kasaY: 'Frame horizontal', kasaD: 'Frame vertical', kanatY: 'Sash horizontal', kanatD: 'Sash vertical', dikme: 'Post', kayit: 'Top / bottom rail',
+        citaY: 'Bead horizontal', citaD: 'Bead vertical', bar: 'BAR', fire: 'waste', eW: 'Width must be 400–6000 mm.', eH: 'Height must be 400–3500 mm.', eN: 'Quantity must be 1–20.' }
+    : { kasaY: 'Kasa yatay', kasaD: 'Kasa dikey', kanatY: 'Kanat yatay', kanatD: 'Kanat dikey', dikme: 'Dikme', kayit: 'Alt / üst kayıt',
+        citaY: 'Çıta yatay', citaD: 'Çıta dikey', bar: 'BOY', fire: 'fire', eW: 'Genişlik 400–6000 mm olmalı.', eH: 'Yükseklik 400–3500 mm olmalı.', eN: 'Adet 1–20 olmalı.' };
   const COLORS = ['#ff3d3d', '#3ea2ff', '#ffd23f', '#4dffc3', '#a98bff'];
 
   // sistem → parça listesi [ad, ölçü(mm), adet]
   const SYS = {
-    surme: (W, H) => [['Kasa yatay', W, 2], ['Kasa dikey', H, 2], ['Kanat yatay', Math.round(W / 2 + 25), 4], ['Kanat dikey', H - 45, 4]],
-    giyotin: (W, H) => [['Dikme', H, 2], ['Alt / üst kayıt', W, 2], ['Kanat yatay', W - 50, 6], ['Kanat dikey', Math.round(H / 3 + 20), 6]],
-    sabit: (W, H) => [['Kasa yatay', W, 2], ['Kasa dikey', H, 2], ['Çıta yatay', W - 60, 2], ['Çıta dikey', H - 60, 2]],
+    surme: (W, H) => [[W_.kasaY, W, 2], [W_.kasaD, H, 2], [W_.kanatY, Math.round(W / 2 + 25), 4], [W_.kanatD, H - 45, 4]],
+    giyotin: (W, H) => [[W_.dikme, H, 2], [W_.kayit, W, 2], [W_.kanatY, W - 50, 6], [W_.kanatD, Math.round(H / 3 + 20), 6]],
+    sabit: (W, H) => [[W_.kasaY, W, 2], [W_.kasaD, H, 2], [W_.citaY, W - 60, 2], [W_.citaD, H - 60, 2]],
   };
 
   function plan(sys, W, H, n) {
@@ -50,9 +56,9 @@
   function run() {
     const sys = $('k-sis').value, W = +$('k-w').value, H = +$('k-h').value, n = +$('k-n').value;
     errEl.textContent = '';
-    if (!(W >= 400 && W <= 6000)) return (errEl.textContent = 'Genişlik 400–6000 mm olmalı.');
-    if (!(H >= 400 && H <= 3500)) return (errEl.textContent = 'Yükseklik 400–3500 mm olmalı.');
-    if (!(n >= 1 && n <= 20)) return (errEl.textContent = 'Adet 1–20 olmalı.');
+    if (!(W >= 400 && W <= 6000)) return (errEl.textContent = W_.eW);
+    if (!(H >= 400 && H <= 3500)) return (errEl.textContent = W_.eH);
+    if (!(n >= 1 && n <= 20)) return (errEl.textContent = W_.eN);
     const r = plan(sys, W, H, n), id = ++runId;
 
     countTo(K('boy'), r.bars.length, v => Math.round(v));
@@ -68,7 +74,7 @@
     r.bars.forEach((b, bi) => {
       const wrap = document.createElement('div');
       const fire = STOCK - b.used;
-      wrap.innerHTML = `<div class="kbar-h"><span>BOY ${bi + 1} · ${STOCK} mm</span><span>fire ${fire} mm</span></div><div class="kbar-t"></div>`;
+      wrap.innerHTML = `<div class="kbar-h"><span>${W_.bar} ${bi + 1} · ${STOCK} mm</span><span>${W_.fire} ${fire} mm</span></div><div class="kbar-t"></div>`;
       const track = wrap.lastChild;
       b.items.forEach(p => {
         const d = document.createElement('div');

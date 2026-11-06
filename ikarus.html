@@ -1,0 +1,122 @@
+<!doctype html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>İkarus İHA Yazılımları — Vaka Çalışması · Mehmet Enes Karaviranlı</title>
+<meta name="description" content="İkarus Havacılık: MAVLink tabanlı İHA yer kontrol istasyonları, pilot HUD uygulaması, kilitlenme modülü ve takım platformu. Mansiyon ödülü, Avcı Drone kaptanlığı.">
+<link rel="canonical" href="https://eneskaraviranli.codes/ikarus.html">
+<link rel="alternate" hreflang="tr" href="https://eneskaraviranli.codes/ikarus.html">
+<link rel="alternate" hreflang="en" href="https://eneskaraviranli.codes/en/ikarus.html">
+<meta property="og:type" content="article">
+<meta property="og:title" content="İkarus İHA Yazılımları — Vaka Çalışması">
+<meta property="og:description" content="MAVLink tabanlı yer kontrol istasyonları, pilot HUD ve takım platformu.">
+<meta property="og:url" content="https://eneskaraviranli.codes/ikarus.html">
+<meta property="og:image" content="https://eneskaraviranli.codes/og-image.png">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="icon" href="favicon-32.png" sizes="32x32" type="image/png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<meta name="theme-color" content="#060606">
+<script>if(!/bot|crawl|spider|slurp|lighthouse|facebookexternalhit|whatsapp|telegram|discord|linkedin|twitter/i.test(navigator.userAgent)&&!matchMedia('(prefers-reduced-motion: reduce)').matches)document.documentElement.classList.add('js')</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="case.css">
+</head>
+<body>
+<div id="agents" aria-hidden="true"></div>
+
+<nav>
+  <a href="./" class="logo"><i>E</i>ENES.</a>
+  <div class="links"><a href="./">Ana sayfa</a><a href="kavira.html">Kavira</a><a href="ikarus.html" class="on">İkarus</a><a href="./#iletisim">İletişim</a></div>
+  <a class="lang" href="en/ikarus.html" hreflang="en">EN</a>
+</nav>
+
+<header class="hero">
+  <div class="wrap">
+    <div class="eyebrow rv">Vaka çalışması · İkarus Havacılık</div>
+    <h1 class="rv">Gökyüzü için<br><em>yer kontrol</em><br>istasyonları</h1>
+    <p class="lead rv">İkarus, Samsun Üniversitesi'nde 2017'de kurulan; İHA, roket ve yapay zekâ üzerine çalışan bir havacılık topluluğu. Ben burada uçağın gözü ve kulağı olan yazılımları yazıyorum: telemetriyi gösteren, görevi planlayan, uçuşu kaydeden ve hedefe kilitlenmeyi sayan yer kontrol istasyonları.</p>
+    <div class="stats rv">
+      <div><b>3</b><small>Takıma YKİ</small></div>
+      <div><b>50 Hz</b><small>Pilot HUD</small></div>
+      <div><b>5 sn</b><small>Kilitlenme sayacı</small></div>
+      <div><b>🏅</b><small>Mansiyon 2025-26</small></div>
+    </div>
+  </div>
+</header>
+
+<section>
+  <div class="wrap">
+    <div class="eyebrow rv">Rolüm</div>
+    <h2 class="rv">Arayüz yazılımcısından kaptanlığa</h2>
+    <div class="two">
+      <div class="box rv"><span class="tag">2025-26 sezonu</span><h3>Arayüz yazılımı</h3>
+        <ul><li>Yer kontrol istasyonu arayüzünü geliştirdim.</li><li>Takımla birlikte mansiyon ödülü kazandık.</li></ul></div>
+      <div class="box rv"><span class="tag">2026-27 sezonu</span><h3>Kaptan ve danışman</h3>
+        <ul><li>Avcı Drone yarışması takım kaptanı.</li><li>Savaşan İHA ve Sabit Kanat İHA yazılım danışmanı.</li><li>İkarus yönetim ekibi üyesi.</li></ul></div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <div class="eyebrow rv">Mimari</div>
+    <h2 class="rv">Uçaktan analize veri yolu</h2>
+    <p class="sub rv">Uçak MAVLink ile YKİ'ye bağlanır; YKİ pilotun telefonuna ham paketleri iletir, uçuş bitince kaydı takım platformuna yükler. Avcı Drone'da kilitlenme modülü hakem sunucusuyla konuşur.</p>
+    <div class="arch rv">
+      <svg viewBox="0 0 980 380" role="img" aria-label="İkarus YKİ mimari şeması">
+        <defs>
+          <path id="i1" d="M180 190 H300"/><path id="i2" d="M300 200 H180"/>
+          <path id="i3" d="M480 170 C540 170 540 70 600 70"/><path id="i4" d="M480 190 H600"/>
+          <path id="i5" d="M480 210 C540 210 540 310 600 310"/>
+        </defs>
+        <use href="#i1" class="wire hot"/><use href="#i3" class="wire hot"/><use href="#i4" class="wire"/><use href="#i5" class="wire" style="stroke-dasharray:4 5"/>
+        <g class="node hot"><rect x="10" y="150" width="170" height="80" rx="6"/><text x="24" y="183">İHA</text><text class="s" x="24" y="203">otopilot · kamera</text></g>
+        <g class="node hot"><rect x="300" y="140" width="180" height="100" rx="6"/><text x="314" y="173">YKİ</text><text class="s" x="314" y="193">Savaşan · Sabit · Avcı</text><text class="s" x="314" y="211">harita · görev · log</text></g>
+        <g class="node"><rect x="600" y="35" width="370" height="70" rx="6"/><text x="614" y="64">Pilot HUD</text><text class="s" x="614" y="84">iOS / Android · ham MAVLink UDP · 50 Hz</text></g>
+        <g class="node"><rect x="600" y="155" width="370" height="70" rx="6"/><text x="614" y="184">Takım platformu</text><text class="s" x="614" y="204">uçuş arşivi · 3D oynatma · ERP · MES · CRM</text></g>
+        <g class="node ai"><rect x="600" y="275" width="370" height="70" rx="6"/><text x="614" y="304">Hakem sunucusu</text><text class="s" x="614" y="324">kilitlenme doğrulama · 10 sn / 5 sn sayaç</text></g>
+        <text class="lbl" x="200" y="180">MAVLink</text><text class="lbl" x="505" y="110">UDP 14550</text><text class="lbl" x="505" y="182">uçuş kaydı</text><text class="lbl" x="505" y="292">kilitlenme</text>
+        <circle r="4.5" fill="#ff3d3d" class="pk" style="color:#ff3d3d"><animateMotion dur="1.2s" repeatCount="indefinite"><mpath href="#i1"/></animateMotion></circle>
+        <circle r="4" fill="#3dff8f" class="pk" style="color:#3dff8f"><animateMotion dur="1.4s" begin=".6s" repeatCount="indefinite"><mpath href="#i2"/></animateMotion></circle>
+        <circle r="4.5" fill="#ff3d3d" class="pk" style="color:#ff3d3d"><animateMotion dur=".9s" begin=".3s" repeatCount="indefinite"><mpath href="#i3"/></animateMotion></circle>
+        <circle r="4.5" fill="#3ea2ff" class="pk" style="color:#3ea2ff"><animateMotion dur="2.2s" begin="1s" repeatCount="indefinite"><mpath href="#i4"/></animateMotion></circle>
+        <circle r="4.5" fill="#ffd23f" class="pk" style="color:#ffd23f"><animateMotion dur="1.8s" begin="1.4s" repeatCount="indefinite"><mpath href="#i5"/></animateMotion></circle>
+      </svg>
+      <div class="arch-note">Kırmızı: telemetri · yeşil: komut · mavi: uçuş kaydı · sarı: kilitlenme</div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <div class="eyebrow rv">Modüller</div>
+    <h2 class="rv">Yazdığım parçalar</h2>
+    <div class="grid3">
+      <div class="card rv"><h4>Savaşan İHA YKİ</h4><p>Telemetri, görev planlama, uçuş kaydı ve sunucuya yükleme.</p></div>
+      <div class="card rv"><h4>Sabit Kanat İHA YKİ</h4><p>Sabit kanat için ayrı, aynı sunucuya bağlanan istasyon.</p></div>
+      <div class="card rv"><h4>Avcı Drone YKİ</h4><p>Savaşan YKİ'den uyarlanan Avcı Drone istasyonu.</p></div>
+      <div class="card rv"><h4>Kilitlenme & hakem</h4><p>Kare geçerliliği, kilit sayacı ve hakem sunucusu haberleşmesi.</p></div>
+      <div class="card rv"><h4>Pilot HUD</h4><p>Ham MAVLink UDP'yi dinleyen 50 Hz HUD + harita uygulaması.</p></div>
+      <div class="card rv"><h4>Takım platformu</h4><p>Uçuş analizi, 3D oynatma, görev panosu, takvim ve KPI'lar.</p></div>
+      <div class="card rv"><h4>Taktik YKİ</h4><p>Taktik görevler için yer kontrol istasyonu arayüzü.</p></div>
+      <div class="card rv"><h4>C4ISR Otonom YKİ</h4><p>Keşif ve kamikaze İHA'ların eşzamanlı otonom operasyonu; SITL destekli, TÜBİTAK 2242.</p></div>
+      <div class="card rv"><h4>Görev modülleri</h4><p>HSS, kilitlenme ve kamikaze senaryoları için geliştirilen modüller.</p></div>
+    </div>
+  </div>
+</section>
+
+<section class="cta">
+  <div class="wrap">
+    <div class="eyebrow rv">Sıradaki</div>
+    <h2 class="rv">Simülatörde bir tur at</h2>
+    <div class="btns rv"><a class="btn btn-red" href="./#yki">YKİ simülatörü →</a><a class="btn btn-ghost" href="kavira.html">Kavira vakası</a></div>
+  </div>
+</section>
+
+<footer><div class="wrap">© 2026 Mehmet Enes Karaviranlı · <a href="./">eneskaraviranli.codes</a></div></footer>
+<script src="js/case.js"></script>
+</body>
+</html>

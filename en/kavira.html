@@ -1,0 +1,144 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Kavira Software — Case Study · Mehmet Enes Karaviranlı</title>
+<meta name="description" content="Kavira Software: 12 live costing, cutting and quoting programs for workshops, 200+ users. Architecture, calculation engine and delivery pipeline.">
+<link rel="canonical" href="https://eneskaraviranli.codes/en/kavira.html">
+<link rel="alternate" hreflang="tr" href="https://eneskaraviranli.codes/kavira.html">
+<link rel="alternate" hreflang="en" href="https://eneskaraviranli.codes/en/kavira.html">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Kavira Software — Case Study">
+<meta property="og:description" content="12 live products, 200+ users: costing, cutting and quoting software for workshops.">
+<meta property="og:url" content="https://eneskaraviranli.codes/en/kavira.html">
+<meta property="og:image" content="https://eneskaraviranli.codes/og-image.png">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" href="../favicon.svg" type="image/svg+xml">
+<link rel="icon" href="../favicon-32.png" sizes="32x32" type="image/png">
+<link rel="apple-touch-icon" href="../apple-touch-icon.png">
+<meta name="theme-color" content="#060606">
+<script>if(!/bot|crawl|spider|slurp|lighthouse|facebookexternalhit|whatsapp|telegram|discord|linkedin|twitter/i.test(navigator.userAgent)&&!matchMedia('(prefers-reduced-motion: reduce)').matches)document.documentElement.classList.add('js')</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../case.css">
+</head>
+<body>
+<div id="agents" aria-hidden="true"></div>
+
+<nav>
+  <a href="./" class="logo"><i>E</i>ENES.</a>
+  <div class="links"><a href="./">Home</a><a href="kavira.html" class="on">Kavira</a><a href="ikarus.html">İkarus</a><a href="./#iletisim">Contact</a></div>
+  <a class="lang" href="../kavira.html" hreflang="tr">TR</a>
+</nav>
+
+<header class="hero">
+  <div class="wrap">
+    <div class="eyebrow rv">Case study · Kavira Software</div>
+    <h1 class="rv">Costing,<br><em>cutting &amp; quoting</em><br>for workshops</h1>
+    <p class="lead rv">Window, façade and fabrication workshops still work out everything from bills of materials to cutting plans and quotes in notebooks or Excel. Kavira does it with free, industry-specific programs built around a single calculation engine.</p>
+    <div class="stats rv">
+      <div><b>12</b><small>Live programs</small></div>
+      <div><b>200+</b><small>Users</small></div>
+      <div><b>10</b><small>Specialist AI agents</small></div>
+      <div><b>0 ₺</b><small>Cost to workshops</small></div>
+    </div>
+  </div>
+</header>
+
+<section>
+  <div class="wrap">
+    <div class="eyebrow rv">Problem → solution</div>
+    <h2 class="rv">A wrong number is the customer&#39;s money</h2>
+    <div class="two">
+      <div class="box rv"><span class="tag">Problem</span><h3>Notebooks, Excel and guesswork</h3>
+        <ul><li>Every system (guillotine, sliding, pergola…) has its own measuring and cutting rules.</li><li>Manual calculation means waste, missing material and wrong quotes.</li><li>Generic software is expensive and doesn&#39;t know the industry.</li></ul></div>
+      <div class="box rv"><span class="tag">Solution</span><h3>Enter the size, get the rest</h3>
+        <ul><li>Bill of materials, cutting plan and waste in one click.</li><li>Costing and PDF quotes, Excel cutting lists.</li><li>A dedicated interface per industry, all on the same verified engine.</li></ul></div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <div class="eyebrow rv">Architecture</div>
+    <h2 class="rv">How a request travels through the system</h2>
+    <p class="sub rv">Each product runs in its own service; the calculation engine is the product&#39;s IP and every change to it is proven by tests.</p>
+    <div class="arch rv">
+      <svg viewBox="0 0 980 380" role="img" aria-label="Kavira architecture diagram">
+        <defs>
+          <path id="k1" d="M170 190 H250"/><path id="k2" d="M420 190 H480"/>
+          <path id="k3" d="M650 190 C690 190 690 100 720 100"/><path id="k4" d="M650 190 C690 190 690 280 720 280"/>
+          <path id="k5" d="M820 130 V160"/><path id="k6" d="M335 70 V150"/>
+        </defs>
+        <use href="#k1" class="wire hot"/><use href="#k2" class="wire hot"/><use href="#k3" class="wire hot"/><use href="#k4" class="wire"/>
+        <use href="#k5" class="wire hot"/><use href="#k6" class="wire" style="stroke-dasharray:4 5"/>
+        <path class="wire" d="M820 310 V340 H570" style="stroke-dasharray:3 5"/>
+        <g class="node"><rect x="10" y="150" width="160" height="80" rx="6"/><text x="24" y="183">Workshop</text><text class="s" x="24" y="203">browser · phone</text></g>
+        <g class="node"><rect x="250" y="150" width="170" height="80" rx="6"/><text x="264" y="183">kavirasoftware.com</text><text class="s" x="264" y="203">nginx · Flutter web</text></g>
+        <g class="node hot"><rect x="480" y="150" width="170" height="80" rx="6"/><text x="494" y="183">FastAPI service</text><text class="s" x="494" y="203">one per product</text></g>
+        <g class="node hot"><rect x="720" y="60" width="240" height="70" rx="6"/><text x="734" y="90">Calc engine</text><text class="s" x="734" y="110">cost · take-off · cutting · waste</text></g>
+        <g class="node"><rect x="720" y="160" width="240" height="60" rx="6"/><text x="734" y="186">Outputs</text><text class="s" x="734" y="205">PDF quote · Excel cutting list</text></g>
+        <g class="node"><rect x="720" y="250" width="240" height="60" rx="6"/><text x="734" y="276">Database</text><text class="s" x="734" y="295">SQLAlchemy · per-company isolation</text></g>
+        <g class="node ai"><rect x="250" y="10" width="170" height="60" rx="6"/><text x="264" y="36">AI agent factory</text><text class="s" x="264" y="55">10 specialists · test · deploy</text></g>
+        <g class="node"><rect x="400" y="320" width="170" height="50" rx="6"/><text x="414" y="342">Nightly backup</text><text class="s" x="414" y="360">encrypted · off-server</text></g>
+        <text class="lbl" x="178" y="180">HTTPS</text><text class="lbl" x="428" y="180">API</text><text class="lbl" x="344" y="115">builds</text>
+        <circle r="4.5" fill="#ff3d3d" class="pk" style="color:#ff3d3d"><animateMotion dur="1.6s" repeatCount="indefinite"><mpath href="#k1"/></animateMotion></circle>
+        <circle r="4.5" fill="#ff3d3d" class="pk" style="color:#ff3d3d"><animateMotion dur="1.6s" begin=".5s" repeatCount="indefinite"><mpath href="#k2"/></animateMotion></circle>
+        <circle r="4.5" fill="#ffd23f" class="pk" style="color:#ffd23f"><animateMotion dur="1.8s" begin=".9s" repeatCount="indefinite"><mpath href="#k3"/></animateMotion></circle>
+        <circle r="4.5" fill="#3ea2ff" class="pk" style="color:#3ea2ff"><animateMotion dur="1.8s" begin="1.1s" repeatCount="indefinite"><mpath href="#k4"/></animateMotion></circle>
+        <circle r="4.5" fill="#3dff8f" class="pk" style="color:#3dff8f"><animateMotion dur="1s" begin="1.6s" repeatCount="indefinite"><mpath href="#k5"/></animateMotion></circle>
+        <circle r="4" fill="#3ea2ff" class="pk" style="color:#3ea2ff"><animateMotion dur="2.4s" repeatCount="indefinite"><mpath href="#k6"/></animateMotion></circle>
+      </svg>
+      <div class="arch-note">Red: request path · yellow: calculation · blue: data · green: output</div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <div class="eyebrow rv">Product family</div>
+    <h2 class="rv">12 industries, one engine</h2>
+    <div class="grid3">
+      <a class="card rv" href="https://kaviragiyotin.online/" target="_blank" rel="noopener"><h4>Guillotine glass</h4><p>Sashes, posts, rails and motor selection.</p><span class="go">kaviragiyotin.online ↗</span></a>
+      <a class="card rv" href="https://kavirasoftware.com/aluminyum/" target="_blank" rel="noopener"><h4>Aluminium joinery</h4><p>Take-offs and cutting with façade → row → cell.</p><span class="go">kavirasoftware.com/aluminyum ↗</span></a>
+      <a class="card rv" href="https://kavirasoftware.com/pvc/" target="_blank" rel="noopener"><h4>PVC windows</h4><p>Cut sizes, steel reinforcement, glass sizes.</p><span class="go">kavirasoftware.com/pvc ↗</span></a>
+      <a class="card rv" href="https://kavirasoftware.com/cambalkon/" target="_blank" rel="noopener"><h4>Glass balconies</h4><p>Sash count, glass weight, profile take-off.</p><span class="go">kavirasoftware.com/cambalkon ↗</span></a>
+      <a class="card rv" href="https://kavirasoftware.com/kisbahcesi/" target="_blank" rel="noopener"><h4>Winter gardens</h4><p>Veranda and glass roof calculation.</p><span class="go">kavirasoftware.com/kisbahcesi ↗</span></a>
+      <a class="card rv" href="https://kavirasoftware.com/korkuluk/" target="_blank" rel="noopener"><h4>Railings</h4><p>Post spacing, glass sizes, regulations.</p><span class="go">kavirasoftware.com/korkuluk ↗</span></a>
+      <a class="card rv" href="https://kavirasoftware.com/pergola/" target="_blank" rel="noopener"><h4>Pergolas</h4><p>Bays, columns, louvres and cutting list.</p><span class="go">kavirasoftware.com/pergola ↗</span></a>
+      <a class="card rv" href="https://kavirasoftware.com/tente/" target="_blank" rel="noopener"><h4>Awnings</h4><p>Fabric take-off, projection, arm selection.</p><span class="go">kavirasoftware.com/tente ↗</span></a>
+      <a class="card rv" href="https://kavirasoftware.com/panjur/" target="_blank" rel="noopener"><h4>Roller shutters</h4><p>Measurement and cost calculation.</p><span class="go">kavirasoftware.com/panjur ↗</span></a>
+      <a class="card rv" href="https://kavirasoftware.com/mobilya" target="_blank" rel="noopener"><h4>Furniture</h4><p>Panel cutting plans and production.</p><span class="go">kavirasoftware.com/mobilya ↗</span></a>
+      <a class="card rv" href="https://kavirasoftware.com/tabela/" target="_blank" rel="noopener"><h4>Signage</h4><p>Channel letters, LEDs, panels and a design studio.</p><span class="go">kavirasoftware.com/tabela ↗</span></a>
+      <a class="card rv" href="https://kavirasoftware.com/atolye/" target="_blank" rel="noopener"><h4>Workshop</h4><p>Production tracking for make-to-order shops.</p><span class="go">kavirasoftware.com/atolye ↗</span></a>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <div class="eyebrow rv">Engineering principles</div>
+    <h2 class="rv">Three unbreakable rules</h2>
+    <div class="grid3">
+      <div class="card rv"><h4>Never break production</h4><p>Every deploy goes through a test gate; if it&#39;s red, it doesn&#39;t ship.</p></div>
+      <div class="card rv"><h4>Cost accuracy is sacred</h4><p>When in doubt, estimate high; an unknown value is never zero, it is shown as "missing".</p></div>
+      <div class="card rv"><h4>No made-up data</h4><p>If a catalogue value is unknown, it is derived with its source or asked for.</p></div>
+    </div>
+    <p class="quote rv">“Whoever writes the engine doesn&#39;t approve it: a separate test agent reviews every change.”</p>
+  </div>
+</section>
+
+<section class="cta">
+  <div class="wrap">
+    <div class="eyebrow rv">Up next</div>
+    <h2 class="rv">Try the cutting engine on the site</h2>
+    <div class="btns rv"><a class="btn btn-red" href="./#kesim">Cutting demo →</a><a class="btn btn-ghost" href="ikarus.html">İkarus case study</a></div>
+  </div>
+</section>
+
+<footer><div class="wrap">© 2026 Mehmet Enes Karaviranlı · <a href="./">eneskaraviranli.codes</a></div></footer>
+<script src="../js/case.js"></script>
+</body>
+</html>

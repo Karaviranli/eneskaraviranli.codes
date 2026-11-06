@@ -1,0 +1,122 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>İkarus UAV Software — Case Study · Mehmet Enes Karaviranlı</title>
+<meta name="description" content="İkarus Aerospace: MAVLink-based UAV ground control stations, a pilot HUD app, a lock-on module and a team platform. Honourable mention award, Interceptor Drone captaincy.">
+<link rel="canonical" href="https://eneskaraviranli.codes/en/ikarus.html">
+<link rel="alternate" hreflang="tr" href="https://eneskaraviranli.codes/ikarus.html">
+<link rel="alternate" hreflang="en" href="https://eneskaraviranli.codes/en/ikarus.html">
+<meta property="og:type" content="article">
+<meta property="og:title" content="İkarus UAV Software — Case Study">
+<meta property="og:description" content="MAVLink-based ground control stations, a pilot HUD and a team platform.">
+<meta property="og:url" content="https://eneskaraviranli.codes/en/ikarus.html">
+<meta property="og:image" content="https://eneskaraviranli.codes/og-image.png">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" href="../favicon.svg" type="image/svg+xml">
+<link rel="icon" href="../favicon-32.png" sizes="32x32" type="image/png">
+<link rel="apple-touch-icon" href="../apple-touch-icon.png">
+<meta name="theme-color" content="#060606">
+<script>if(!/bot|crawl|spider|slurp|lighthouse|facebookexternalhit|whatsapp|telegram|discord|linkedin|twitter/i.test(navigator.userAgent)&&!matchMedia('(prefers-reduced-motion: reduce)').matches)document.documentElement.classList.add('js')</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../case.css">
+</head>
+<body>
+<div id="agents" aria-hidden="true"></div>
+
+<nav>
+  <a href="./" class="logo"><i>E</i>ENES.</a>
+  <div class="links"><a href="./">Home</a><a href="kavira.html">Kavira</a><a href="ikarus.html" class="on">İkarus</a><a href="./#iletisim">Contact</a></div>
+  <a class="lang" href="../ikarus.html" hreflang="tr">TR</a>
+</nav>
+
+<header class="hero">
+  <div class="wrap">
+    <div class="eyebrow rv">Case study · İkarus Aerospace</div>
+    <h1 class="rv">Ground<br><em>control stations</em><br>for the sky</h1>
+    <p class="lead rv">İkarus is an aerospace community founded at Samsun University in 2017, working on UAVs, rockets and AI. I write the software that acts as the aircraft&#39;s eyes and ears: ground control stations that show telemetry, plan missions, log flights and count target lock-ons.</p>
+    <div class="stats rv">
+      <div><b>3</b><small>Teams with a GCS</small></div>
+      <div><b>50 Hz</b><small>Pilot HUD</small></div>
+      <div><b>5 s</b><small>Lock-on timer</small></div>
+      <div><b>🏅</b><small>Award 2025-26</small></div>
+    </div>
+  </div>
+</header>
+
+<section>
+  <div class="wrap">
+    <div class="eyebrow rv">My role</div>
+    <h2 class="rv">From interface developer to captain</h2>
+    <div class="two">
+      <div class="box rv"><span class="tag">2025-26 season</span><h3>Interface software</h3>
+        <ul><li>Built the ground control station interface.</li><li>Won an honourable mention award with the team.</li></ul></div>
+      <div class="box rv"><span class="tag">2026-27 season</span><h3>Captain and advisor</h3>
+        <ul><li>Interceptor Drone competition team captain.</li><li>Software advisor for the Combat UAV and Fixed-Wing UAV teams.</li><li>İkarus management board member.</li></ul></div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <div class="eyebrow rv">Architecture</div>
+    <h2 class="rv">The data path from aircraft to analysis</h2>
+    <p class="sub rv">The aircraft connects to the GCS over MAVLink; the GCS forwards raw packets to the pilot&#39;s phone and uploads the log to the team platform when the flight ends. On the Interceptor Drone, the lock-on module talks to the referee server.</p>
+    <div class="arch rv">
+      <svg viewBox="0 0 980 380" role="img" aria-label="İkarus GCS architecture diagram">
+        <defs>
+          <path id="i1" d="M180 190 H300"/><path id="i2" d="M300 200 H180"/>
+          <path id="i3" d="M480 170 C540 170 540 70 600 70"/><path id="i4" d="M480 190 H600"/>
+          <path id="i5" d="M480 210 C540 210 540 310 600 310"/>
+        </defs>
+        <use href="#i1" class="wire hot"/><use href="#i3" class="wire hot"/><use href="#i4" class="wire"/><use href="#i5" class="wire" style="stroke-dasharray:4 5"/>
+        <g class="node hot"><rect x="10" y="150" width="170" height="80" rx="6"/><text x="24" y="183">UAV</text><text class="s" x="24" y="203">autopilot · camera</text></g>
+        <g class="node hot"><rect x="300" y="140" width="180" height="100" rx="6"/><text x="314" y="173">GCS</text><text class="s" x="314" y="193">Combat · Fixed · Interceptor</text><text class="s" x="314" y="211">map · mission · log</text></g>
+        <g class="node"><rect x="600" y="35" width="370" height="70" rx="6"/><text x="614" y="64">Pilot HUD</text><text class="s" x="614" y="84">iOS / Android · ham MAVLink UDP · 50 Hz</text></g>
+        <g class="node"><rect x="600" y="155" width="370" height="70" rx="6"/><text x="614" y="184">Team platform</text><text class="s" x="614" y="204">flight archive · 3D replay · ERP · MES · CRM</text></g>
+        <g class="node ai"><rect x="600" y="275" width="370" height="70" rx="6"/><text x="614" y="304">Referee server</text><text class="s" x="614" y="324">lock-on validation · 10 s / 5 s timer</text></g>
+        <text class="lbl" x="200" y="180">MAVLink</text><text class="lbl" x="505" y="110">UDP 14550</text><text class="lbl" x="505" y="182">flight log</text><text class="lbl" x="505" y="292">lock-on</text>
+        <circle r="4.5" fill="#ff3d3d" class="pk" style="color:#ff3d3d"><animateMotion dur="1.2s" repeatCount="indefinite"><mpath href="#i1"/></animateMotion></circle>
+        <circle r="4" fill="#3dff8f" class="pk" style="color:#3dff8f"><animateMotion dur="1.4s" begin=".6s" repeatCount="indefinite"><mpath href="#i2"/></animateMotion></circle>
+        <circle r="4.5" fill="#ff3d3d" class="pk" style="color:#ff3d3d"><animateMotion dur=".9s" begin=".3s" repeatCount="indefinite"><mpath href="#i3"/></animateMotion></circle>
+        <circle r="4.5" fill="#3ea2ff" class="pk" style="color:#3ea2ff"><animateMotion dur="2.2s" begin="1s" repeatCount="indefinite"><mpath href="#i4"/></animateMotion></circle>
+        <circle r="4.5" fill="#ffd23f" class="pk" style="color:#ffd23f"><animateMotion dur="1.8s" begin="1.4s" repeatCount="indefinite"><mpath href="#i5"/></animateMotion></circle>
+      </svg>
+      <div class="arch-note">Red: telemetry · green: commands · blue: flight log · yellow: lock-on</div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <div class="eyebrow rv">Modules</div>
+    <h2 class="rv">What I built</h2>
+    <div class="grid3">
+      <div class="card rv"><h4>Combat UAV GCS</h4><p>Telemetry, mission planning, flight logging and server upload.</p></div>
+      <div class="card rv"><h4>Fixed-Wing UAV GCS</h4><p>A separate station for the fixed-wing aircraft, connected to the same server.</p></div>
+      <div class="card rv"><h4>Interceptor Drone GCS</h4><p>The Interceptor Drone station, adapted from the Combat GCS.</p></div>
+      <div class="card rv"><h4>Lock-on &amp; referee</h4><p>Frame validity, lock timer and referee server communication.</p></div>
+      <div class="card rv"><h4>Pilot HUD</h4><p>A 50 Hz HUD + map app that listens to raw MAVLink UDP.</p></div>
+      <div class="card rv"><h4>Team platform</h4><p>Flight analysis, 3D replay, task board, calendar and KPIs.</p></div>
+      <div class="card rv"><h4>Tactical GCS</h4><p>Ground control station interface for tactical missions.</p></div>
+      <div class="card rv"><h4>C4ISR Autonomous GCS</h4><p>Simultaneous autonomous operation of reconnaissance and kamikaze UAVs; SITL-backed, TÜBİTAK 2242.</p></div>
+      <div class="card rv"><h4>Mission modules</h4><p>Modules for air defence, lock-on and kamikaze scenarios.</p></div>
+    </div>
+  </div>
+</section>
+
+<section class="cta">
+  <div class="wrap">
+    <div class="eyebrow rv">Up next</div>
+    <h2 class="rv">Take the simulator for a spin</h2>
+    <div class="btns rv"><a class="btn btn-red" href="./#yki">GCS simulator →</a><a class="btn btn-ghost" href="kavira.html">Kavira case study</a></div>
+  </div>
+</section>
+
+<footer><div class="wrap">© 2026 Mehmet Enes Karaviranlı · <a href="./">eneskaraviranli.codes</a></div></footer>
+<script src="../js/case.js"></script>
+</body>
+</html>

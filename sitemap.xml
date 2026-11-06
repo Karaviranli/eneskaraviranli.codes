@@ -1,10 +1,39 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
     <loc>https://eneskaraviranli.codes/</loc>
     <lastmod>2026-11-06</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>1.0</priority>
-    <image:image><image:loc>https://eneskaraviranli.codes/og-image.png</image:loc></image:image>
+    <xhtml:link rel="alternate" hreflang="tr" href="https://eneskaraviranli.codes/"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://eneskaraviranli.codes/en/"/>
+  </url>
+  <url>
+    <loc>https://eneskaraviranli.codes/en/</loc>
+    <lastmod>2026-11-06</lastmod>
+    <xhtml:link rel="alternate" hreflang="tr" href="https://eneskaraviranli.codes/"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://eneskaraviranli.codes/en/"/>
+  </url>
+  <url>
+    <loc>https://eneskaraviranli.codes/kavira.html</loc>
+    <lastmod>2026-11-06</lastmod>
+    <xhtml:link rel="alternate" hreflang="tr" href="https://eneskaraviranli.codes/kavira.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://eneskaraviranli.codes/en/kavira.html"/>
+  </url>
+  <url>
+    <loc>https://eneskaraviranli.codes/en/kavira.html</loc>
+    <lastmod>2026-11-06</lastmod>
+    <xhtml:link rel="alternate" hreflang="tr" href="https://eneskaraviranli.codes/kavira.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://eneskaraviranli.codes/en/kavira.html"/>
+  </url>
+  <url>
+    <loc>https://eneskaraviranli.codes/ikarus.html</loc>
+    <lastmod>2026-11-06</lastmod>
+    <xhtml:link rel="alternate" hreflang="tr" href="https://eneskaraviranli.codes/ikarus.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://eneskaraviranli.codes/en/ikarus.html"/>
+  </url>
+  <url>
+    <loc>https://eneskaraviranli.codes/en/ikarus.html</loc>
+    <lastmod>2026-11-06</lastmod>
+    <xhtml:link rel="alternate" hreflang="tr" href="https://eneskaraviranli.codes/ikarus.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://eneskaraviranli.codes/en/ikarus.html"/>
   </url>
 </urlset>

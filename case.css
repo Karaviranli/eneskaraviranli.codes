@@ -1,0 +1,91 @@
+/* Vaka çalışması sayfaları — ana sitenin tasarım diliyle aynı */
+:root{
+  --bg:#060606; --panel:#0c0c0d; --line:#1e1e21; --line2:#2a2a2e;
+  --text:#ededed; --mute:#8b8b92; --dim:#5c5c63;
+  --red:#ff3d3d; --red2:#e3262d; --blue:#3ea2ff; --green:#3dff8f; --yellow:#ffd23f;
+  --mono:'JetBrains Mono',ui-monospace,monospace; --sans:'Inter',system-ui,sans-serif; --cond:'Anton',Impact,sans-serif;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth;overflow-x:clip}
+body{background:var(--bg);color:var(--text);font-family:var(--sans);line-height:1.6;-webkit-font-smoothing:antialiased;overflow-x:clip}
+body::before{content:"";position:fixed;inset:0;pointer-events:none;z-index:0;
+  background:radial-gradient(55% 45% at 50% 20%,rgba(255,90,40,.10),transparent 70%)}
+a{color:inherit}
+b,strong{color:#fff}
+.wrap{max-width:1120px;margin:0 auto;padding:0 32px;position:relative;z-index:1}
+
+nav{position:fixed;top:14px;left:50%;transform:translateX(-50%);z-index:50;display:flex;align-items:center;gap:20px;
+  padding:7px 14px 7px 7px;background:rgba(12,12,13,.8);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);
+  border:1px solid var(--line);border-radius:10px;font-size:12px;white-space:nowrap}
+.logo{display:flex;align-items:center;gap:8px;font-family:var(--mono);font-weight:700;letter-spacing:.06em;text-decoration:none}
+.logo i{width:26px;height:26px;border-radius:5px;background:var(--red);display:grid;place-items:center;font-style:normal;font-family:var(--cond);font-size:15px;color:#000}
+nav .links{display:flex;gap:16px;color:var(--mute)}
+nav .links a{text-decoration:none}
+nav .links a:hover,nav .links a.on{color:#fff}
+.lang{font-family:var(--mono);font-size:10px;font-weight:700;color:var(--blue);text-decoration:none;border:1px solid rgba(62,162,255,.4);padding:3px 6px;border-radius:4px}
+
+header.hero{padding:150px 0 70px;position:relative}
+.eyebrow{font-family:var(--mono);font-size:10.5px;font-weight:700;color:var(--red);letter-spacing:.22em;text-transform:uppercase;margin-bottom:14px}
+h1{font-family:var(--cond);font-weight:400;font-size:clamp(46px,7vw,96px);line-height:.95;letter-spacing:.005em}
+h1 em{font-style:normal;color:transparent;-webkit-text-stroke:2px var(--red2)}
+.lead{font-size:clamp(16px,1.6vw,19px);color:#cfcfd4;max-width:720px;margin-top:22px}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--line);border:1px solid var(--line);margin-top:44px}
+.stats div{background:var(--bg);padding:18px 20px}
+.stats b{display:block;font-family:var(--cond);font-weight:400;font-size:34px;color:var(--red);line-height:1.1}
+.stats small{font-family:var(--mono);font-size:10px;color:var(--mute);letter-spacing:.08em;text-transform:uppercase}
+
+section{padding:70px 0;position:relative}
+h2{font-size:clamp(26px,3vw,36px);font-weight:800;letter-spacing:-.03em;line-height:1.15;margin-bottom:14px}
+.sub{color:var(--mute);max-width:680px}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-top:30px}
+.box{border:1px solid var(--line);background:var(--panel);padding:24px}
+.box h3{font-size:17px;margin-bottom:8px}
+.box p,.box li{color:var(--mute);font-size:14px}
+.box ul{list-style:none;margin-top:8px}
+.box li{padding-left:16px;position:relative;margin-bottom:6px}
+.box li::before{content:"";position:absolute;left:0;top:9px;width:6px;height:6px;background:var(--red)}
+.tag{display:inline-block;font-family:var(--mono);font-size:9.5px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--red);border:1px solid rgba(227,38,45,.45);padding:3px 7px;margin-bottom:12px}
+
+/* mimari şema */
+.arch{margin-top:30px;border:1px solid var(--line2);background:#07090b;border-radius:6px;padding:18px;overflow:hidden}
+.arch svg{display:block;width:100%;height:auto}
+.arch .node rect{fill:#0d1116;stroke:#2a3540;stroke-width:1.2}
+.arch .node.hot rect{stroke:var(--red2)}
+.arch .node.ai rect{stroke:var(--blue);stroke-dasharray:4 4}
+.arch .node text{fill:#e8f3ff;font:700 13px var(--mono)}
+.arch .node text.s{fill:#7f98ad;font:500 10.5px var(--mono)}
+.arch .wire{fill:none;stroke:#2a3540;stroke-width:1.5}
+.arch .wire.hot{stroke:rgba(227,38,45,.55)}
+.arch .lbl{fill:#5c6b78;font:600 10px var(--mono);letter-spacing:.06em}
+.arch .pk{filter:drop-shadow(0 0 6px currentColor)}
+.arch-note{font-family:var(--mono);font-size:10.5px;color:var(--dim);margin-top:10px}
+
+.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:30px}
+.card{border:1px solid var(--line);background:var(--panel);padding:18px;text-decoration:none;display:block;transition:border-color .2s,transform .2s}
+a.card:hover{border-color:rgba(227,38,45,.6);transform:translateY(-2px)}
+.card h4{font-size:15px;margin-bottom:4px}
+.card p{font-size:12.5px;color:var(--mute)}
+.card .go{display:block;margin-top:10px;font-family:var(--mono);font-size:10.5px;color:var(--blue)}
+
+.quote{border-left:2px solid var(--red);padding:6px 0 6px 22px;font-size:clamp(18px,2vw,22px);font-weight:700;max-width:760px;margin-top:30px}
+.cta{text-align:center;padding:110px 0 120px}
+.cta h2{font-size:clamp(28px,4vw,44px)}
+.btns{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin-top:26px}
+.btn{font-family:var(--mono);font-size:12px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;padding:13px 18px;text-decoration:none;border:1px solid transparent}
+.btn-red{background:var(--red2);color:#fff}
+.btn-red:hover{background:var(--red)}
+.btn-ghost{background:#18181b;border-color:var(--line2);color:#fff}
+.btn-ghost:hover{border-color:#fff}
+footer{border-top:1px solid var(--line);padding:26px 0 40px;font-family:var(--mono);font-size:10.5px;color:var(--dim)}
+
+/* kaydırınca beliren bloklar + ajanlar */
+.js .rv{opacity:0;transform:translateY(14px);transition:opacity .6s ease,transform .6s ease}
+.js .rv.in{opacity:1;transform:none}
+#agents{position:absolute;inset:0;pointer-events:none;z-index:60;overflow:hidden}
+.agent{position:absolute;left:0;top:0;will-change:transform;filter:drop-shadow(0 2px 4px rgba(0,0,0,.6))}
+.ripple{position:absolute;width:30px;height:30px;margin:-15px 0 0 -15px;border:2px solid;border-radius:50%;pointer-events:none;animation:rip .55s ease-out forwards}
+@keyframes rip{from{transform:scale(.2);opacity:1}to{transform:scale(1.6);opacity:0}}
+
+@media (max-width:860px){.two,.grid3{grid-template-columns:1fr}.stats{grid-template-columns:1fr 1fr}}
+@media (max-width:640px){.wrap{padding:0 16px}nav .links{display:none}header.hero{padding-top:120px}}
+@media (prefers-reduced-motion:reduce){.js .rv{opacity:1;transform:none;transition:none}#agents{display:none}.arch .pk{display:none}}

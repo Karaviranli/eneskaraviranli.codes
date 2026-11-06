@@ -11,6 +11,17 @@
   const T = k => root.querySelector(`[data-t="${k}"]`);
   const btns = [...root.querySelectorAll('[data-mode]')];
   const STATIC = window.__STATIC || matchMedia('(prefers-reduced-motion: reduce)').matches;
+  // iki dil: sayfanın lang değerine göre
+  const EN = document.documentElement.lang === 'en';
+  const L = EN
+    ? { OTONOM: 'AUTO', MANUEL: 'MANUAL', 'KİLİT': 'LOCK', RTL: 'RTL', track: 'TRACKING', manual: 'MANUAL · turn with ← → / A D',
+        lockOk: '✓ LOCK-ON CONFIRMED', lowBat: '⚠ LOW BATTERY · RETURNING', time: 'time', swapped: 'battery swapped', returning: 'returning to launch',
+        hb: 'link established', loaded: 'mission loaded', home: 'H · HOME', N: 'N', lat: 'N', lon: 'E', kmh: 'km/h', lockLbl: 'LOCK',
+        dirs: { 0: 'N', 90: 'E', 180: 'S', 270: 'W' } }
+    : { OTONOM: 'OTONOM', MANUEL: 'MANUEL', 'KİLİT': 'KİLİT', RTL: 'RTL', track: 'TAKİP EDİLİYOR', manual: 'MANUEL · ← → / A D ile dön',
+        lockOk: '✓ KİLİTLENME BAŞARILI', lowBat: '⚠ BATARYA DÜŞÜK · EVE DÖN', time: 'süre', swapped: 'batarya değiştirildi', returning: 'eve dönülüyor',
+        hb: 'bağlantı kuruldu', loaded: 'görev yüklendi', home: 'H · EV', N: 'K', lat: 'K', lon: 'D', kmh: 'km/s', lockLbl: 'KİLİT',
+        dirs: { 0: 'K', 90: 'D', 180: 'G', 270: 'B' } };
 
   const WORLD = { w: 2400, h: 1500 };            // metre
   const HOME = { x: 360, y: 1180 };
@@ -88,10 +99,10 @@
       for (const t of targets) { const d = dist(st, t); if (d < bd) { bd = d; best = t; } }
       st.lock = best; st.lockT = 0;
       log('w', `CMD_DO_SET_ROI target=H-${best.id} dist=${bd.toFixed(0)}m`);
-      say(`H-${best.id} TAKİP EDİLİYOR`);
+      say(EN ? `${L.track} H-${best.id}` : `H-${best.id} ${L.track}`);
     } else st.lock = null;
     if (m === 'RTL') log('w', 'CMD_NAV_RETURN_TO_LAUNCH');
-    if (m === 'MANUEL') say('MANUEL · ← → / A D ile dön');
+    if (m === 'MANUEL') say(L.manual);
     st.mode = m;
     btns.forEach(b => b.classList.toggle('on', b.dataset.mode === m));
   }
@@ -118,15 +129,15 @@
       const ang = Math.abs(wrap(Math.atan2(t.y - st.y, t.x - st.x) - st.hdg)), d = dist(st, t);
       if (ang < 22 * D2R && d < 460) st.lockT += dt; else st.lockT = Math.max(0, st.lockT - dt * 1.5);
       if (st.lockT >= LOCK_S) {
-        log('g', `LOCK_OK target=H-${t.id} süre=${LOCK_S.toFixed(1)}s`);
-        say(`✓ KİLİTLENME BAŞARILI · H-${t.id}`, true);
+        log('g', `LOCK_OK target=H-${t.id} ${L.time}=${LOCK_S.toFixed(1)}s`);
+        say(`${L.lockOk} · H-${t.id}`, true);
         t.x = Math.random() < .5 ? 160 : WORLD.w - 160; t.y = 200 + Math.random() * (WORLD.h - 400);
         setMode('OTONOM');
       }
     } else if (st.mode === 'RTL') {
       rate = steerTo(HOME.x, HOME.y);
       if (dist(st, HOME) < 70) {
-        if (st.bat < 30) { st.bat = 100; log('g', 'SYS_STATUS batarya değiştirildi · 100%'); }
+        if (st.bat < 30) { st.bat = 100; log('g', `SYS_STATUS ${L.swapped} · 100%`); }
         setMode('OTONOM');
       }
     }
@@ -143,7 +154,7 @@
     st.pitch += (Math.max(-12, Math.min(12, climb * .6)) - st.pitch) * Math.min(1, dt * 3);
     st.spd += ((st.mode === 'KİLİT' ? 27 : 22) + Math.sin(now * .0007) * 1.2 - st.spd) * Math.min(1, dt);
     st.bat = Math.max(0, st.bat - dt * .22);
-    if (st.bat < 18 && st.mode !== 'RTL') { log('r', 'BATTERY_LOW · eve dönülüyor'); say('⚠ BATARYA DÜŞÜK · EVE DÖN'); setMode('RTL'); }
+    if (st.bat < 18 && st.mode !== 'RTL') { log('r', `BATTERY_LOW · ${L.returning}`); say(L.lowBat); setMode('RTL'); }
     st.sats = 13 + ((now / 4000 | 0) % 3); st.link = 96 + ((now / 2500 | 0) % 4);
     if (now - trailT > 120) { st.trail.push([st.x, st.y]); if (st.trail.length > 140) st.trail.shift(); trailT = now; }
     // hedef dronlar
@@ -180,7 +191,7 @@
     c.fillStyle = 'rgba(255,255,255,.08)'; c.fillRect(-46, -6, 92, 12);
     c.strokeStyle = 'rgba(255,255,255,.35)'; c.setLineDash([5, 5]); c.beginPath(); c.moveTo(-40, 0); c.lineTo(40, 0); c.stroke(); c.setLineDash([]);
     c.restore();
-    c.fillStyle = '#3dff8f'; c.font = '700 10px JetBrains Mono, monospace'; c.fillText('H · EV', hx + 10, hy + 18);
+    c.fillStyle = '#3dff8f'; c.font = '700 10px JetBrains Mono, monospace'; c.fillText(L.home, hx + 10, hy + 18);
     // rota
     if (st.wp.length) {
       c.strokeStyle = 'rgba(62,162,255,.55)'; c.setLineDash([6, 6]); c.lineWidth = 1.3;
@@ -225,7 +236,7 @@
         c.beginPath(); c.arc(x, y, s + 8, -Math.PI / 2, -Math.PI / 2 + st.lockT / LOCK_S * Math.PI * 2);
         c.strokeStyle = '#ffd23f'; c.lineWidth = 2.5; c.stroke();
         c.fillStyle = '#ffd23f'; c.font = '700 10px JetBrains Mono, monospace';
-        c.fillText(`KİLİT ${st.lockT.toFixed(1)}/${LOCK_S}s`, x + s + 12, y + 4);
+        c.fillText(`${L.lockLbl} ${st.lockT.toFixed(1)}/${LOCK_S}s`, x + s + 12, y + 4);
       }
     }
     // İHA
@@ -240,13 +251,13 @@
     c.fillStyle = '#fff'; c.font = '700 10px JetBrains Mono, monospace'; c.fillText('İKARUS-1', px + 16, py - 12);
     // pusula + ölçek + koordinat
     c.fillStyle = 'rgba(255,255,255,.7)'; c.font = '700 11px JetBrains Mono, monospace'; c.textAlign = 'center';
-    c.fillText('K', MW - 22, 22); c.beginPath(); c.moveTo(MW - 22, 28); c.lineTo(MW - 27, 42); c.lineTo(MW - 17, 42); c.closePath(); c.fill();
+    c.fillText(L.N, MW - 22, 22); c.beginPath(); c.moveTo(MW - 22, 28); c.lineTo(MW - 27, 42); c.lineTo(MW - 17, 42); c.closePath(); c.fill();
     c.textAlign = 'left';
     const bar = 200 * sc;
     c.strokeStyle = 'rgba(255,255,255,.6)'; c.lineWidth = 1.5; c.beginPath(); c.moveTo(14, MH - 16); c.lineTo(14 + bar, MH - 16); c.stroke();
     c.font = '500 9px JetBrains Mono, monospace'; c.fillText('200 m', 14, MH - 22);
     const [la, lo] = latlon();
-    c.textAlign = 'right'; c.fillStyle = 'rgba(207,232,255,.7)'; c.fillText(`${la}°K  ${lo}°D`, MW - 12, MH - 12); c.textAlign = 'left';
+    c.textAlign = 'right'; c.fillStyle = 'rgba(207,232,255,.7)'; c.fillText(`${la}°${L.lat}  ${lo}°${L.lon}`, MW - 12, MH - 12); c.textAlign = 'left';
   }
 
   /* ---- birincil uçuş göstergesi ---- */
@@ -302,14 +313,14 @@
       c.fillStyle = '#fff'; c.font = '700 12px JetBrains Mono, monospace'; c.fillText(Math.round(val), x + 6, cy + 4);
       c.fillStyle = '#7f98ad'; c.font = '500 8px JetBrains Mono, monospace'; c.fillText(unit, x + 6, PH - 46);
     };
-    tape(8, st.spd * 3.6, 5, 'km/s', true);
+    tape(8, st.spd * 3.6, 5, L.kmh, true);
     tape(PW - 54, st.alt, 10, 'm', false);
     // pusula şeridi
     const hy = PH - 30, h = hdgDeg();
     c.fillStyle = 'rgba(0,0,0,.55)'; c.fillRect(0, hy, PW, 30);
     c.save(); c.beginPath(); c.rect(0, hy, PW, 30); c.clip();
     c.strokeStyle = 'rgba(255,255,255,.7)'; c.fillStyle = '#fff'; c.font = '600 9px JetBrains Mono, monospace'; c.textAlign = 'center';
-    const names = { 0: 'K', 90: 'D', 180: 'G', 270: 'B' };
+    const names = L.dirs;
     for (let d = Math.floor((h - 60) / 5) * 5; d <= h + 60; d += 5) {
       const x = cx + (d - h) * 3.4, dd = ((d % 360) + 360) % 360;
       c.beginPath(); c.moveTo(x, hy); c.lineTo(x, hy + (dd % 15 ? 5 : 9)); c.stroke();
@@ -319,14 +330,14 @@
     c.fillStyle = '#ffd23f'; c.beginPath(); c.moveTo(cx, hy + 1); c.lineTo(cx - 5, hy - 6); c.lineTo(cx + 5, hy - 6); c.closePath(); c.fill();
     // mod etiketi
     c.font = '700 10px JetBrains Mono, monospace';
-    c.fillStyle = st.mode === 'KİLİT' ? '#ff3d3d' : '#3dff8f'; c.fillText(st.mode, 62, 24);
+    c.fillStyle = st.mode === 'KİLİT' ? '#ff3d3d' : '#3dff8f'; c.fillText(L[st.mode], 62, 24);
     c.fillStyle = '#cfe8ff'; c.textAlign = 'right'; c.fillText(`${Math.round(h).toString().padStart(3, '0')}°`, PW - 62, 24); c.textAlign = 'left';
   }
 
   /* ---- telemetri + log ---- */
   function telemetry(now) {
-    T('mod').textContent = st.mode;
-    T('hiz').textContent = `${(st.spd * 3.6).toFixed(0)} km/s`;
+    T('mod').textContent = L[st.mode];
+    T('hiz').textContent = `${(st.spd * 3.6).toFixed(0)} ${L.kmh}`;
     T('alt').textContent = `${st.alt.toFixed(0)} m`;
     T('bat').textContent = `${st.bat.toFixed(0)}%`;
     T('bat').style.color = st.bat < 25 ? '#ff6b6b' : '';
@@ -338,7 +349,7 @@
       if (k === 0) log('k', `ATTITUDE roll=${st.roll.toFixed(1)} pitch=${st.pitch.toFixed(1)} yaw=${hdgDeg().toFixed(1)}`);
       else if (k === 1) log('k', `GLOBAL_POSITION_INT lat=${la} lon=${lo} alt=${st.alt.toFixed(1)}`);
       else if (k === 2) log('k', `VFR_HUD airspeed=${st.spd.toFixed(1)} heading=${hdgDeg().toFixed(0)} throttle=${(55 + st.rate * 30).toFixed(0)}`);
-      else log('d', `HEARTBEAT type=FIXED_WING mode=${st.mode} bat=${st.bat.toFixed(0)}% link=${st.link}%`);
+      else log('d', `HEARTBEAT type=FIXED_WING mode=${L[st.mode]} bat=${st.bat.toFixed(0)}% link=${st.link}%`);
     }
   }
 
@@ -380,8 +391,8 @@
 
   new IntersectionObserver(es => { visible = es[0].isIntersecting; if (visible) size(); }).observe(root);
   if ('ResizeObserver' in window) new ResizeObserver(size).observe(root);
-  log('g', 'HEARTBEAT bağlantı kuruldu · İKARUS-1 · MAVLink v2');
-  log('k', 'MISSION_COUNT 4 · görev yüklendi');
+  log('g', `HEARTBEAT ${L.hb} · İKARUS-1 · MAVLink v2`);
+  log('k', `MISSION_COUNT 4 · ${L.loaded}`);
   if (STATIC) { size(); update(0, 0); drawMap(0); drawPfd(); telemetry(0); return; }
   requestAnimationFrame(loop);
 })();

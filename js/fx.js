@@ -48,6 +48,7 @@
 
   /* ---- kaydırma çubuğu ---- */
   const bar = document.getElementById('scrollbar');
+  const tl = document.getElementById('tl'), tlFill = document.getElementById('tl-fill');
 
   /* ---- hero paralaksı + portre eğimi ---- */
   const giant = document.querySelector('.giant'), card = document.querySelector('.portrait');
@@ -73,6 +74,11 @@
       b.track.style.transform = `translate3d(${b.x}px,0,0)`;
     }
     if (bar) { const max = root.scrollHeight - innerHeight; bar.style.width = (max > 0 ? y / max * 100 : 0) + '%'; }
+    // zaman çizelgesi çizgisi okudukça dolar
+    if (tlFill) {
+      const r = tl.getBoundingClientRect(), p = Math.max(0, Math.min(1, (innerHeight * .7 - r.top) / r.height));
+      tlFill.style.height = (p * 100).toFixed(1) + '%';
+    }
     // hero: dev yazı kaydırmayla büyüyüp uzaklaşır (yalnız inşa bittiyse)
     if (giant && giant.classList.contains('built') && !giant.__drag && root.classList.contains('boot-done')) {
       const p = Math.min(1, y / innerHeight);
